@@ -1,0 +1,35 @@
+.task-panel {
+  background: var(--green-mid);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  color: white;
+}
+
+.new-task {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--green-soft);
+  border: none;
+  padding: 10px 12px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+}
+
+.new-task img{
+  height: 20px;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding: 5px;
+  border-radius: 20px;
+  cursor: pointer;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
