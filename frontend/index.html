@@ -1,25 +1,324 @@
-<!doctype html>
-<html lang="en">
-<<<<<<< HEAD
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>goldenboot</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
-=======
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Boot — Conecta. Comunica. Logra.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Syne:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:    #F5C842;
+    --gold2:   #E8A020;
+    --dark:    #0D0D0D;
+    --dark2:   #161616;
+    --surface: #1E1E1E;
+    --border:  #2A2A2A;
+    --text:    #F0EDE6;
+    --muted:   #888;
+    --green:   #4ADE80;
+    --red:     #F87171;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ── Fondo animado ── */
+  .bg {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(245,200,66,.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(232,160,32,.08) 0%, transparent 50%),
+      var(--dark);
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(245,200,66,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,200,66,.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* ── Contenedor auth ── */
+  .auth-wrapper {
+    position: relative; z-index: 10;
+    width: 100%; max-width: 440px;
+    padding: 2rem;
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .logo-icon {
+    font-size: 3rem;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+  .logo h1 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -.02em;
+  }
+  .logo p { color: var(--muted); font-size: .9rem; margin-top: .25rem; }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 24px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(245,200,66,.06);
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    background: var(--dark2);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 1.75rem;
+  }
+  .tab {
+    flex: 1; padding: .6rem; border: none; background: none;
+    color: var(--muted); font-family: 'Syne', sans-serif;
+    font-size: .9rem; cursor: pointer; border-radius: 9px;
+    transition: all .2s;
+  }
+  .tab.active {
+    background: var(--gold);
+    color: var(--dark);
+    font-weight: 600;
+  }
+
+  /* ── Formulario ── */
+  .form { display: flex; flex-direction: column; gap: 1rem; }
+  .field { display: flex; flex-direction: column; gap: .4rem; }
+  .field label { font-size: .8rem; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; }
+  .field input {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: .95rem;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field input:focus { border-color: var(--gold); }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--dark);
+    border: none; border-radius: 12px;
+    padding: .85rem;
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    cursor: pointer; margin-top: .5rem;
+    transition: all .2s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  /* ── Alert ── */
+  .alert {
+    padding: .75rem 1rem; border-radius: 10px;
+    font-size: .88rem; display: none;
+  }
+  .alert.error   { background: rgba(248,113,113,.15); color: var(--red); border: 1px solid rgba(248,113,113,.3); }
+  .alert.success { background: rgba(74,222,128,.15);  color: var(--green); border: 1px solid rgba(74,222,128,.3); }
+  .alert.show { display: block; }
+
+  /* ── Loader ── */
+  .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid rgba(0,0,0,.3);
+    border-top-color: var(--dark);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    vertical-align: middle; margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
-   
+<div class="bg"></div>
+<div class="bg-grid"></div>
+
+<div class="auth-wrapper">
+  <div class="logo">
+    <span class="logo-icon">🥇</span>
+    <h1>Golden Boot</h1>
+    <p>Conecta. Comunica. Logra.</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Iniciar sesión</button>
+      <button class="tab"        onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <div class="alert" id="alert"></div>
+
+    <!-- Login -->
+    <div id="form-login" class="form">
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" id="login-email" placeholder="tu@correo.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="login-password" placeholder="••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" onclick="handleLogin()">Entrar</button>
+    </div>
+
+    <!-- Registro -->
+    <div id="form-register" class="form" style="display:none">
+      <div class="field">
+        <label>Nombre de usuario</label>
+        <input type="text" id="reg-username" placeholder="golden_user" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" id="reg-email" placeholder="tu@correo.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="reg-password" placeholder="mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+      <button class="btn-primary" onclick="handleRegister()">Crear cuenta</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Configuración ──────────────────────────────────────────
+// Cambia esta URL al iniciar ngrok: ngrok http 80
+// Ejemplo: https://abc123.ngrok-free.app/Progra_Orientada_Internet
+const API_BASE = window.location.origin + '/Progra_Orientada_Internet/backend/api';
+
+// ── Tabs ──────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+  document.getElementById('form-login').style.display    = tab === 'login'    ? 'flex' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'flex' : 'none';
+  hideAlert();
+}
+
+// ── Helpers ────────────────────────────────────────────────
+function showAlert(msg, type = 'error') {
+  const el = document.getElementById('alert');
+  el.textContent = msg;
+  el.className   = `alert ${type} show`;
+}
+function hideAlert() {
+  document.getElementById('alert').className = 'alert';
+}
+function setLoading(btn, loading) {
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? '<span class="spinner"></span>Cargando...'
+    : btn.dataset.label;
+}
+
+// ── Login ──────────────────────────────────────────────────
+async function handleLogin() {
+  const btn = document.querySelector('#form-login .btn-primary');
+  btn.dataset.label = btn.textContent;
+  setLoading(btn, true);
+  hideAlert();
+
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  try {
+    const res  = await fetch(`${API_BASE}/auth.php?action=login`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
+
+    localStorage.setItem('gb_user', JSON.stringify(data.user));
+    showAlert('¡Bienvenido! Redirigiendo...', 'success');
+    setTimeout(() => window.location.href = 'chat.html', 800);
+  } catch (e) {
+    showAlert(e.message);
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
+// ── Registro ───────────────────────────────────────────────
+async function handleRegister() {
+  const btn = document.querySelector('#form-register .btn-primary');
+  btn.dataset.label = btn.textContent;
+  setLoading(btn, true);
+  hideAlert();
+
+  const username = document.getElementById('reg-username').value.trim();
+  const email    = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+
+  try {
+    const res  = await fetch(`${API_BASE}/auth.php?action=register`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error al registrarse');
+
+    localStorage.setItem('gb_user', JSON.stringify(data.user));
+    showAlert('¡Cuenta creada! Redirigiendo...', 'success');
+    setTimeout(() => window.location.href = 'chat.html', 800);
+  } catch (e) {
+    showAlert(e.message);
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
+// ── Enter key ─────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const loginVisible = document.getElementById('form-login').style.display !== 'none';
+    loginVisible ? handleLogin() : handleRegister();
+  }
+});
+
+// ── Auto-redirect si ya está logueado ─────────────────────
+(async () => {
+  try {
+    const res = await fetch(`${API_BASE}/auth.php?action=me`, { credentials: 'include' });
+    if (res.ok) window.location.href = 'chat.html';
+  } catch {}
+})();
+</script>
 </body>
 </html>
->>>>>>> 6026e893388cca441ce2ced24e140c5e50bd070a
