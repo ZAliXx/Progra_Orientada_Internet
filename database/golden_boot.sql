@@ -117,6 +117,8 @@ CREATE TABLE notifications (
 );
 
 -- Recompensas base
+-- Se pueden cambiar los icons con esta página :D
+-- https://getemoji.com/#activities
 INSERT INTO rewards (name, description, icon, points_req) VALUES
 ('Primer Mensaje',   'Enviaste tu primer mensaje',              '💬', 1),
 ('Comunicador',      'Enviaste 50 mensajes',                    '🗣️', 50),
