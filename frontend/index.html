@@ -32,7 +32,7 @@
     overflow: hidden;
   }
 
-  /* ── Fondo animado ── */
+  /* Fondo animado */
   .bg {
     position: fixed; inset: 0; z-index: 0;
     background:
@@ -48,7 +48,7 @@
     background-size: 48px 48px;
   }
 
-  /* ── Contenedor auth ── */
+  /* Contenedor auth */
   .auth-wrapper {
     position: relative; z-index: 10;
     width: 100%; max-width: 440px;
@@ -78,7 +78,7 @@
     50%      { transform: translateY(-8px); }
   }
 
-  /* ── Card ── */
+  /* Card */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -87,7 +87,7 @@
     box-shadow: 0 24px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(245,200,66,.06);
   }
 
-  /* ── Tabs ── */
+  /* Tabs */
   .tabs {
     display: flex;
     background: var(--dark2);
@@ -107,7 +107,7 @@
     font-weight: 600;
   }
 
-  /* ── Formulario ── */
+  /* Formulario */
   .form { display: flex; flex-direction: column; gap: 1rem; }
   .field { display: flex; flex-direction: column; gap: .4rem; }
   .field label { font-size: .8rem; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; }
@@ -139,7 +139,7 @@
   .btn-primary:active { transform: translateY(0); }
   .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-  /* ── Alert ── */
+  /* Alert */
   .alert {
     padding: .75rem 1rem; border-radius: 10px;
     font-size: .88rem; display: none;
@@ -148,7 +148,7 @@
   .alert.success { background: rgba(74,222,128,.15);  color: var(--green); border: 1px solid rgba(74,222,128,.3); }
   .alert.show { display: block; }
 
-  /* ── Loader ── */
+  /* Loader */
   .spinner {
     display: inline-block; width: 16px; height: 16px;
     border: 2px solid rgba(0,0,0,.3);
@@ -212,12 +212,12 @@
 </div>
 
 <script>
-// ── Configuración ──────────────────────────────────────────
+// Configuración
 // Cambia esta URL al iniciar ngrok: ngrok http 80
 // Ejemplo: https://abc123.ngrok-free.app/Progra_Orientada_Internet
 const API_BASE = window.location.origin + '/Progra_Orientada_Internet/backend/api';
 
-// ── Tabs ──────────────────────────────────────────────────
+// Tabs
 function switchTab(tab) {
   document.querySelectorAll('.tab').forEach((t, i) => {
     t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
@@ -227,7 +227,7 @@ function switchTab(tab) {
   hideAlert();
 }
 
-// ── Helpers ────────────────────────────────────────────────
+// Helpers
 function showAlert(msg, type = 'error') {
   const el = document.getElementById('alert');
   el.textContent = msg;
@@ -243,7 +243,7 @@ function setLoading(btn, loading) {
     : btn.dataset.label;
 }
 
-// ── Login ──────────────────────────────────────────────────
+// Login
 async function handleLogin() {
   const btn = document.querySelector('#form-login .btn-primary');
   btn.dataset.label = btn.textContent;
@@ -273,7 +273,7 @@ async function handleLogin() {
   }
 }
 
-// ── Registro ───────────────────────────────────────────────
+// Registro
 async function handleRegister() {
   const btn = document.querySelector('#form-register .btn-primary');
   btn.dataset.label = btn.textContent;
@@ -304,7 +304,7 @@ async function handleRegister() {
   }
 }
 
-// ── Enter key ─────────────────────────────────────────────
+// Enter key
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const loginVisible = document.getElementById('form-login').style.display !== 'none';
@@ -312,7 +312,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ── Auto-redirect si ya está logueado ─────────────────────
+// Auto-redirect si ya está logueado
 (async () => {
   try {
     const res = await fetch(`${API_BASE}/auth.php?action=me`, { credentials: 'include' });

@@ -1,8 +1,7 @@
 <?php
-// ============================================
+
 //   backend/api/messages.php
 //   Endpoints para chat privado y grupal
-// ============================================
 
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/Database.php';
@@ -27,7 +26,7 @@ match ($action) {
     default        => json_response(['error' => 'Acción no válida'], 400),
 };
 
-// ── ENVIAR MENSAJE ────────────────────────────
+// ENVIAR MENSAJE
 function sendMessage(PDO $db, int $senderId): void {
     $data       = json_decode(file_get_contents('php://input'), true) ?? [];
     $content    = trim($data['content']      ?? '');
@@ -79,7 +78,7 @@ function sendMessage(PDO $db, int $senderId): void {
     json_response(['success' => true, 'message' => $stmt->fetch()], 201);
 }
 
-// ── HISTORIAL ─────────────────────────────────
+// HISTORIAL
 function getHistory(PDO $db, int $userId): void {
     $receiverId = (int)($_GET['receiver_id'] ?? 0);
     $groupId    = (int)($_GET['group_id']    ?? 0);
@@ -116,7 +115,7 @@ function getHistory(PDO $db, int $userId): void {
     json_response(['messages' => $messages]);
 }
 
-// ── SUBIDA DE ARCHIVOS ────────────────────────
+// SUBIDA DE ARCHIVOS
 function uploadFile(PDO $db, int $senderId): void {
     if (!isset($_FILES['file'])) {
         json_response(['error' => 'No se recibió archivo'], 422);
@@ -171,7 +170,7 @@ function uploadFile(PDO $db, int $senderId): void {
     ], 201);
 }
 
-// ── MENSAJES NO LEÍDOS ────────────────────────
+// MENSAJES NO LEÍDOS
 function getUnread(PDO $db, int $userId): void {
     $stmt = $db->prepare(
         'SELECT COUNT(*) AS total FROM messages
@@ -181,7 +180,7 @@ function getUnread(PDO $db, int $userId): void {
     json_response($stmt->fetch());
 }
 
-// ── MARCAR COMO LEÍDOS ────────────────────────
+// MARCAR COMO LEÍDOS
 function markRead(PDO $db, int $userId): void {
     $data       = json_decode(file_get_contents('php://input'), true) ?? [];
     $senderId   = (int)($data['sender_id'] ?? 0);

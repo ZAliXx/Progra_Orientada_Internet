@@ -1,8 +1,7 @@
 <?php
-// ============================================
+
 //   backend/config/Database.php
 //   Conexión PDO singleton
-// ============================================
 
 require_once __DIR__ . '/config.php';
 

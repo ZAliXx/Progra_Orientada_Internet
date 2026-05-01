@@ -1,9 +1,7 @@
 <?php
-// ============================================
+
 //   backend/websocket/server.php
 //   Servidor WebSocket con Ratchet
-//   Ejecutar: php backend/websocket/server.php
-// ============================================
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/config/config.php';
@@ -36,7 +34,7 @@ class GoldenBootChat implements MessageComponentInterface {
 
         switch ($msg['type']) {
 
-            // ── Autenticación ─────────────────
+            // Autenticación
             case 'auth':
                 $userId = $this->validateSession($msg['session_id'] ?? '');
                 if (!$userId) {
@@ -59,7 +57,7 @@ class GoldenBootChat implements MessageComponentInterface {
                 echo "[WS] Usuario $userId autenticado\n";
                 break;
 
-            // ── Mensaje privado ───────────────
+            // Mensaje privado
             case 'private_msg':
                 $senderId   = $this->connUsers[$from->resourceId] ?? null;
                 $receiverId = (int)($msg['receiver_id'] ?? 0);
@@ -91,7 +89,7 @@ class GoldenBootChat implements MessageComponentInterface {
                 $from->send(json_encode($payload));
                 break;
 
-            // ── Mensaje grupal ────────────────
+            // Mensaje grupal
             case 'group_msg':
                 $senderId = $this->connUsers[$from->resourceId] ?? null;
                 $groupId  = (int)($msg['group_id'] ?? 0);
@@ -124,7 +122,7 @@ class GoldenBootChat implements MessageComponentInterface {
                 }
                 break;
 
-            // ── Señalización WebRTC ───────────
+            // Señalización WebRTC
             case 'webrtc_offer':
             case 'webrtc_answer':
             case 'webrtc_ice':
@@ -139,7 +137,7 @@ class GoldenBootChat implements MessageComponentInterface {
                 }
                 break;
 
-            // ── Compartir ubicación ───────────
+            // Compartir ubicación
             case 'location':
                 $senderId   = $this->connUsers[$from->resourceId] ?? null;
                 $receiverId = (int)($msg['receiver_id'] ?? 0);
@@ -186,7 +184,7 @@ class GoldenBootChat implements MessageComponentInterface {
                 }
                 break;
 
-            // ── Typing indicator ──────────────
+            // Typing indicator
             case 'typing':
                 $targetId = (int)($msg['target_id'] ?? 0);
                 $senderId = $this->connUsers[$from->resourceId] ?? null;
@@ -220,7 +218,7 @@ class GoldenBootChat implements MessageComponentInterface {
         $conn->close();
     }
 
-    // ── Helpers ───────────────────────────────
+    // Helpers
     private function broadcast(array $data): void {
         $json = json_encode($data);
         foreach ($this->clients as $client) {
@@ -243,7 +241,7 @@ class GoldenBootChat implements MessageComponentInterface {
     }
 }
 
-// ── Iniciar servidor ──────────────────────────
+// Iniciar servidor
 $server = IoServer::factory(
     new HttpServer(new WsServer(new GoldenBootChat())),
     WS_PORT,

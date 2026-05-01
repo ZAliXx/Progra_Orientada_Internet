@@ -1,8 +1,7 @@
 <?php
-// ============================================
+
 //   backend/api/auth.php
 //   Endpoints: register / login / logout / me
-// ============================================
 
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/Database.php';
@@ -22,7 +21,7 @@ match ($action) {
     default    => json_response(['error' => 'Acción no válida'], 400),
 };
 
-// ── REGISTRO ─────────────────────────────────
+// REGISTRO
 function handleRegister(PDO $db): void {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         json_response(['error' => 'Método no permitido'], 405);
@@ -69,7 +68,7 @@ function handleRegister(PDO $db): void {
     ], 201);
 }
 
-// ── LOGIN ─────────────────────────────────────
+// LOGIN
 function handleLogin(PDO $db): void {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         json_response(['error' => 'Método no permitido'], 405);
@@ -88,7 +87,7 @@ function handleLogin(PDO $db): void {
     $user = $stmt->fetch();
 
     if (!$user || !password_verify($password, $user['password'])) {
-        json_response(['error' => 'Credenciales incorrectas'], 401);
+        json_response(['error' => 'Usuario y/o contraseña incorrectas'], 401);
     }
 
     updateStatus($db, $user['id'], 'online');
@@ -103,7 +102,7 @@ function handleLogin(PDO $db): void {
     ]);
 }
 
-// ── LOGOUT ────────────────────────────────────
+// LOGOUT
 function handleLogout(PDO $db): void {
     if (!empty($_SESSION['user_id'])) {
         updateStatus($db, $_SESSION['user_id'], 'offline');
@@ -112,7 +111,7 @@ function handleLogout(PDO $db): void {
     json_response(['success' => true, 'message' => 'Sesión cerrada']);
 }
 
-// ── ME (usuario actual) ───────────────────────
+// ME (usuario actual)
 function handleMe(PDO $db): void {
     if (empty($_SESSION['user_id'])) {
         json_response(['error' => 'No autenticado'], 401);
@@ -120,7 +119,7 @@ function handleMe(PDO $db): void {
     json_response(['user' => fetchUser($db, $_SESSION['user_id'])]);
 }
 
-// ── Helpers ───────────────────────────────────
+// Helpers
 function fetchUser(PDO $db, int $id): array {
     $stmt = $db->prepare(
         'SELECT id, username, email, avatar, status, points, created_at, last_seen

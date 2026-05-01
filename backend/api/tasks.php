@@ -1,7 +1,6 @@
 <?php
-// ============================================
+
 //   backend/api/tasks.php
-// ============================================
 
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/Database.php';

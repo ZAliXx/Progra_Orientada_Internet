@@ -440,10 +440,9 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
 </head>
 <body>
 
-<!-- ══ SIDEBAR ══════════════════════════════════════════════ -->
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <span style="font-size:1.4rem">🥇</span>
     <span class="sidebar-logo">Golden Boot</span>
   </div>
 
@@ -492,7 +491,7 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
   </div>
 </aside>
 
-<!-- ══ MAIN ═════════════════════════════════════════════════ -->
+<!-- MAIN -->
 <main class="main">
   <!-- Empty state -->
   <div class="empty-state" id="empty-state">
@@ -510,10 +509,10 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
         <div class="chat-sub" id="chat-sub">offline</div>
       </div>
       <div class="header-actions">
-        <button class="btn-action" id="btn-videocall" onclick="startCall()" title="Videollamada" style="display:none">📹 Llamar</button>
-        <button class="btn-action" onclick="toggleTaskPanel()">✅ Tareas</button>
-        <button class="btn-action" onclick="toggleLeaderboard()">🏆 Ranking</button>
-        <button class="btn-action" onclick="shareLocation()">📍 Ubicación</button>
+        <button class="btn-action" id="btn-videocall" onclick="startCall()" title="Videollamada" style="display:none">Llamar</button>
+        <button class="btn-action" onclick="toggleTaskPanel()">Tareas</button>
+        <button class="btn-action" onclick="toggleLeaderboard()">Ranking</button>
+        <button class="btn-action" onclick="shareLocation()">Ubicación</button>
       </div>
     </div>
 
@@ -539,10 +538,10 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
   </div>
 </main>
 
-<!-- ══ SIDE PANEL: Tareas ═══════════════════════════════════ -->
+<!-- SIDE PANEL: Tareas -->
 <aside class="side-panel" id="task-panel">
   <div class="panel-header">
-    <span class="panel-title">✅ Tareas del grupo</span>
+    <span class="panel-title">Tareas del grupo</span>
     <button class="btn-icon" onclick="toggleTaskPanel()">✕</button>
   </div>
   <div style="padding:1rem;border-bottom:1px solid var(--border)">
@@ -551,19 +550,19 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
   <div class="panel-body" id="tasks-list"></div>
 </aside>
 
-<!-- ══ SIDE PANEL: Leaderboard ══════════════════════════════ -->
+<!-- SIDE PANEL: Leaderboard -->
 <aside class="side-panel" id="leaderboard-panel">
   <div class="panel-header">
-    <span class="panel-title">🏆 Ranking Global</span>
+    <span class="panel-title">Ranking Global</span>
     <button class="btn-icon" onclick="toggleLeaderboard()">✕</button>
   </div>
   <div class="panel-body" id="leaderboard-list"></div>
 </aside>
 
-<!-- ══ MODAL: Crear grupo ════════════════════════════════════ -->
+<!-- MODAL: Crear grupo -->
 <div class="modal-overlay" id="modal-group">
   <div class="modal">
-    <h3>👥 Crear grupo</h3>
+    <h3>Crear grupo</h3>
     <input type="text" id="group-name" placeholder="Nombre del grupo">
     <textarea id="group-desc" placeholder="Descripción (opcional)"></textarea>
     <label style="font-size:.82rem;color:var(--muted)">Agregar miembros:</label>
@@ -575,10 +574,10 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
   </div>
 </div>
 
-<!-- ══ MODAL: Crear tarea ════════════════════════════════════ -->
+<!-- MODAL: Crear tarea -->
 <div class="modal-overlay" id="modal-task">
   <div class="modal">
-    <h3>✅ Nueva tarea</h3>
+    <h3>Nueva tarea</h3>
     <input type="text" id="task-title" placeholder="Título de la tarea">
     <textarea id="task-desc" placeholder="Descripción (opcional)"></textarea>
     <select id="task-assign"><option value="">Asignar a... (opcional)</option></select>
@@ -590,20 +589,20 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
   </div>
 </div>
 
-<!-- ══ MODAL: Llamada entrante ═══════════════════════════════ -->
+<!-- MODAL: Llamada entrante -->
 <div class="modal-overlay" id="modal-incoming-call">
   <div class="modal" style="text-align:center;align-items:center">
     <span style="font-size:3rem">📹</span>
     <h3 id="incoming-caller-name">Alguien te llama</h3>
     <p style="color:var(--muted);font-size:.9rem">Videollamada entrante</p>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="rejectCall()" style="color:var(--red);border-color:var(--red)">❌ Rechazar</button>
-      <button class="btn-modal-ok" onclick="acceptCall()">✅ Aceptar</button>
+      <button class="btn-modal-cancel" onclick="rejectCall()" style="color:var(--red);border-color:var(--red)">Rechazar</button>
+      <button class="btn-modal-ok" onclick="acceptCall()">Aceptar</button>
     </div>
   </div>
 </div>
 
-<!-- ══ VIDEOLLAMADA ══════════════════════════════════════════ -->
+<!--  VIDEOLLAMADA -->
 <div class="call-overlay" id="call-overlay">
   <div class="video-grid">
     <video id="remote-video" autoplay playsinline></video>
@@ -616,23 +615,22 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
   </div>
 </div>
 
-<!-- ── File input ── -->
+<!-- File input -->
 <input type="file" id="file-input" accept="image/*,audio/*,video/*,.pdf,.txt,.doc,.docx"
        onchange="handleFileUpload(this)">
 
-<!-- ── Toast container ── -->
+<!-- Toast container -->
 <div id="toast-container"></div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-//   GOLDEN BOOT — Frontend App
-// ══════════════════════════════════════════════════════════════
+
+//   GOLDEN BOOT - Frontend App - PENDING 
 
 const API_BASE = window.location.origin + '/Progra_Orientada_Internet/backend/api';
 // Cambia el puerto si usas otro:
 const WS_URL   = 'wss://mankind-lesser-unsigned.ngrok-free.dev';
 
-// ── Estado ────────────────────────────────────────────────────
+// Estado 
 let currentUser  = null;
 let activeChat   = null;  // { type:'private'|'group', id, name }
 let ws           = null;
@@ -645,7 +643,7 @@ let peerConn     = null;
 let localStream  = null;
 let incomingCall = null;
 
-// ══ INIT ══════════════════════════════════════════════════════
+// INIT
 (async () => {
   try {
     const res  = await apiFetch('/auth.php?action=me');
@@ -668,7 +666,7 @@ function initUI() {
   document.getElementById('my-avatar').textContent = currentUser.username[0].toUpperCase();
 }
 
-// ══ API HELPER ════════════════════════════════════════════════
+// API HELPER
 async function apiFetch(path, options = {}) {
   const res = await fetch(API_BASE + path, {
     credentials: 'include',
@@ -680,7 +678,7 @@ async function apiFetch(path, options = {}) {
   return data;
 }
 
-// ══ WEBSOCKET ═════════════════════════════════════════════════
+// WEBSOCKET
 function connectWebSocket() {
   ws = new WebSocket(WS_URL);
 
@@ -713,7 +711,7 @@ function wsSend(data) {
 function handleWsMessage(msg) {
   switch (msg.type) {
     case 'auth_ok':
-      toast('🟢 Conectado en tiempo real');
+      toast('Conectado en tiempo real');
       break;
 
     case 'private_msg':
@@ -722,7 +720,7 @@ function handleWsMessage(msg) {
         appendMessage(msg, msg.sender_id == currentUser.id);
       } else if (msg.sender_id != currentUser.id) {
         showUnreadBadge('private');
-        toast(`💬 Mensaje de ${getUserName(msg.sender_id)}`);
+        toast(`Mensaje de ${getUserName(msg.sender_id)}`);
       }
       break;
 
@@ -730,7 +728,7 @@ function handleWsMessage(msg) {
       if (activeChat?.type === 'group' && msg.group_id == activeChat.id) {
         appendMessage(msg, msg.sender_id == currentUser.id);
       } else {
-        toast(`👥 Mensaje en grupo #${msg.group_id}`);
+        toast(`Mensaje en grupo #${msg.group_id}`);
       }
       break;
 
@@ -756,7 +754,7 @@ function handleWsMessage(msg) {
     case 'call_request':
       incomingCall = msg;
       document.getElementById('incoming-caller-name').textContent =
-        `📹 ${getUserName(msg.from_id)} te llama`;
+        `${getUserName(msg.from_id)} te llama`;
       openModal('modal-incoming-call');
       break;
 
@@ -766,7 +764,7 @@ function handleWsMessage(msg) {
       break;
 
     case 'call_reject':
-      toast('❌ Llamada rechazada');
+      toast('Llamada rechazada');
       closeModal('modal-incoming-call');
       break;
 
@@ -788,7 +786,7 @@ function handleWsMessage(msg) {
   }
 }
 
-// ══ USERS & GROUPS ════════════════════════════════════════════
+// USERS & GROUPS
 async function loadAllUsers() {
   const data = await apiFetch('/groups.php?action=all_users');
   allUsers = data.users || [];
@@ -854,7 +852,7 @@ function getUserName(userId) {
   return allUsers.find(u => u.id == userId)?.username || `#${userId}`;
 }
 
-// ══ ABRIR CHATS ═══════════════════════════════════════════════
+// ABRIR CHATS
 async function openPrivateChat(userId, username, status) {
   activeChat = { type: 'private', id: userId, name: username };
 
@@ -903,7 +901,7 @@ async function openGroupChat(groupId, groupName) {
   loadTasks(groupId);
 }
 
-// ══ MENSAJES ══════════════════════════════════════════════════
+// MENSAJES
 function renderMessages(messages) {
   const container = document.getElementById('messages');
   container.innerHTML = '';
@@ -1008,7 +1006,7 @@ function showTyping() {
   typingTimer = setTimeout(() => el?.remove(), 2000);
 }
 
-// ══ ARCHIVOS ══════════════════════════════════════════════════
+// ARCHIVOS
 async function handleFileUpload(input) {
   if (!input.files[0] || !activeChat) return;
   const file = input.files[0];
@@ -1022,7 +1020,7 @@ async function handleFileUpload(input) {
       method: 'POST', credentials: 'include', body: form,
     });
     const data = await res.json();
-    toast('📎 Archivo enviado');
+    toast('Archivo enviado');
     // Recargar mensajes
     const msgs = await apiFetch(
       activeChat.type === 'private'
@@ -1031,12 +1029,12 @@ async function handleFileUpload(input) {
     );
     renderMessages(msgs.messages || []);
   } catch (e) {
-    toast('❌ Error subiendo archivo', true);
+    toast('Error subiendo archivo', true);
   }
   input.value = '';
 }
 
-// ══ UBICACIÓN ═════════════════════════════════════════════════
+// UBICACIÓN
 function shareLocation() {
   if (!activeChat) return;
   navigator.geolocation.getCurrentPosition(pos => {
@@ -1047,11 +1045,11 @@ function shareLocation() {
       receiver_id: activeChat.type === 'private' ? activeChat.id : undefined,
       group_id:    activeChat.type === 'group'   ? activeChat.id : undefined,
     });
-    toast('📍 Ubicación compartida');
-  }, () => toast('❌ No se pudo obtener ubicación', true));
+    toast('Ubicación compartida');
+  }, () => toast('No se pudo obtener ubicación', true));
 }
 
-// ══ GRUPOS ════════════════════════════════════════════════════
+// GRUPOS
 function openCreateGroup() {
   // Llenar lista de usuarios
   const cont = document.getElementById('group-users-check');
@@ -1070,8 +1068,8 @@ async function createGroup() {
   const members = [...document.querySelectorAll('#group-users-check input:checked')]
                     .map(cb => parseInt(cb.value));
 
-  if (!name) { toast('❌ Ingresa un nombre', true); return; }
-  if (members.length < 2) { toast('❌ Agrega al menos 2 miembros (mínimo 3 en total)', true); return; }
+  if (!name) { toast('Ingresa un nombre', true); return; }
+  if (members.length < 2) { toast('Agrega al menos 2 miembros (mínimo 3 en total)', true); return; }
 
   await apiFetch('/groups.php?action=create', {
     method: 'POST',
@@ -1085,7 +1083,7 @@ async function createGroup() {
   document.getElementById('group-desc').value = '';
 }
 
-// ══ TAREAS ════════════════════════════════════════════════════
+// TAREAS
 async function loadTasks(groupId) {
   const data  = await apiFetch(`/tasks.php?action=list&group_id=${groupId}`);
   const tasks = data.tasks || [];
@@ -1099,8 +1097,8 @@ async function loadTasks(groupId) {
         ${t.due_date ? ` · 📅 ${t.due_date}` : ''}
       </div>
       <span class="task-status status-${t.status}">${
-        t.status === 'done' ? '✅ Completada' :
-        t.status === 'in_progress' ? '⏳ En progreso' : '🕐 Pendiente'
+        t.status === 'done' ? 'Completada' :
+        t.status === 'in_progress' ? 'En progreso' : 'Pendiente'
       }</span>
       ${t.status !== 'done' ? `<br><button class="btn-complete" onclick="completeTask(${t.id})">Marcar como terminada</button>` : ''}
     </div>
@@ -1109,7 +1107,7 @@ async function loadTasks(groupId) {
 
 function openCreateTask() {
   if (!activeChat || activeChat.type !== 'group') {
-    toast('❌ Selecciona un grupo primero', true); return;
+    toast('Selecciona un grupo primero', true); return;
   }
   // Llenar selector de usuarios
   apiFetch(`/groups.php?action=members&group_id=${activeChat.id}`).then(data => {
@@ -1128,7 +1126,7 @@ async function createTask() {
   const assign = document.getElementById('task-assign').value;
   const due    = document.getElementById('task-due').value;
 
-  if (!title) { toast('❌ Título requerido', true); return; }
+  if (!title) { toast('Título requerido', true); return; }
 
   await apiFetch('/tasks.php?action=create', {
     method: 'POST',
@@ -1140,7 +1138,7 @@ async function createTask() {
     }),
   });
 
-  toast('✅ Tarea creada');
+  toast('Tarea creada');
   closeModal('modal-task');
   document.getElementById('task-title').value = '';
   document.getElementById('task-desc').value  = '';
@@ -1152,7 +1150,7 @@ async function completeTask(taskId) {
     method: 'POST',
     body: JSON.stringify({ task_id: taskId }),
   });
-  toast('🎉 ¡Tarea completada! +20 pts');
+  toast('¡Tarea completada! +20 pts');
   loadTasks(activeChat.id);
   // Actualizar puntos
   const me = await apiFetch('/auth.php?action=me');
@@ -1192,11 +1190,11 @@ async function loadMyRewards() {
   `).join('') || '<p style="color:var(--muted);font-size:.85rem">Aún no tienes recompensas.</p>';
 }
 
-// ══ VIDEOLLAMADA (WebRTC) ═════════════════════════════════════
+// VIDEOLLAMADA (WebRTC)
 async function startCall() {
   if (!activeChat || activeChat.type !== 'private') return;
   wsSend({ type: 'call_request', target_id: activeChat.id });
-  toast('📹 Llamando...');
+  toast('Llamando...');
   await startWebRTC(true);
 }
 
@@ -1274,7 +1272,7 @@ function toggleCam() {
   document.getElementById('btn-cam').textContent = localStream.getVideoTracks()[0]?.enabled ? '📷' : '📵';
 }
 
-// ══ UI HELPERS ════════════════════════════════════════════════
+// UI HELPERS
 function switchSideTab(tab) {
   document.querySelectorAll('.stab').forEach((b, i) => {
     const tabs = ['private','groups','tasks','rewards'];
