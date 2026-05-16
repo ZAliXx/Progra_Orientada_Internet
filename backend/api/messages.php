@@ -23,6 +23,7 @@ match ($action) {
     'upload'       => uploadFile($db, $userId),
     'unread'       => getUnread($db, $userId),
     'mark_read'    => markRead($db, $userId),
+    'send_location' => sendLocation($db, $userId),
     default        => json_response(['error' => 'Acción no válida'], 400),
 };
 
@@ -191,4 +192,46 @@ function markRead(PDO $db, int $userId): void {
     )->execute([$userId, $senderId]);
 
     json_response(['success' => true]);
+}
+
+function sendLocation(PDO $db, int $senderId): void {
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $lat = (float)($data['lat'] ?? 0);
+    $lng = (float)($data['lng'] ?? 0);
+    $mapsUrl = $data['maps_url'] ?? "https://www.google.com/maps?q=$lat,$lng";
+    $receiverId = (int)($data['receiver_id'] ?? 0);
+    $groupId = (int)($data['group_id'] ?? 0);
+    
+    if (!$lat || !$lng) {
+        json_response(['error' => 'Coordenadas inválidas'], 422);
+    }
+    
+    $stmt = $db->prepare(
+        'INSERT INTO messages (sender_id, receiver_id, group_id, content, file_type)
+         VALUES (?, ?, ?, ?, ?)'
+    );
+    $stmt->execute([
+        $senderId,
+        $receiverId ?: null,
+        $groupId ?: null,
+        $mapsUrl,
+        'location'
+    ]);
+    
+    $msgId = $db->lastInsertId();
+    
+    // Obtener el mensaje completo
+    $stmt = $db->prepare(
+        'SELECT m.*, u.username, u.avatar
+         FROM messages m
+         JOIN users u ON u.id = m.sender_id
+         WHERE m.id = ?'
+    );
+    $stmt->execute([$msgId]);
+    $message = $stmt->fetch();
+    
+    // Guardar también lat/lng en metadata (opcional??? checar rubrica
+    // Por ahora solo guardamos el link
+    
+    json_response(['success' => true, 'message' => $message], 201);
 }

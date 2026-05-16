@@ -129,6 +129,5 @@ INSERT INTO rewards (name, description, icon, points_req) VALUES
 ('Videollamador',    'Realizaste tu primera videollamada',      '📹', 1),
 ('MVP',              'Acumulaste 500 puntos',                   '🏆', 500);
 
--- Usuario demo (password: 123456  → en producción usar password_hash)
-INSERT INTO users (username, email, password, points) VALUES
-('demo_user', 'demo@goldenboot.app', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uJDL53pJ2', 0);
+ALTER TABLE calls ADD COLUMN is_read TINYINT(1) DEFAULT 0 AFTER status;
+ALTER TABLE calls ADD COLUMN call_duration INT DEFAULT 0 AFTER ended_at;
