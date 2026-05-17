@@ -6,759 +6,16 @@
 <title>Golden Boot — Chat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --gold:    #F5C842;
-  --gold2:   #E8A020;
-  --dark:    #0D0D0D;
-  --dark2:   #141414;
-  --surface: #1A1A1A;
-  --surface2:#222;
-  --border:  #2C2C2C;
-  --text:    #F0EDE6;
-  --muted:   #777;
-  --green:   #4ADE80;
-  --red:     #F87171;
-  --blue:    #60A5FA;
-  --sidebar: 280px;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{
-  font-family:'Syne',sans-serif;
-  background:var(--dark);
-  color:var(--text);
-  display:flex;
-}
-
-/* ══ MOBILE HEADER ═══════════════════════════════════════════════ */
-.mobile-header {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: var(--dark2);
-  border-bottom: 1px solid var(--border);
-  z-index: 100;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
-}
-
-.mobile-header .menu-btn {
-  background: none;
-  border: none;
-  color: var(--gold);
-  font-size: 1.8rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-}
-
-.mobile-header .mobile-logo {
-  font-family: 'Clash Display', sans-serif;
-  font-size: 1.2rem;
-  color: var(--gold);
-  font-weight: 700;
-}
-
-.mobile-header .mobile-logout {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 1.3rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: color 0.2s;
-}
-
-.mobile-header .mobile-logout:hover {
-  color: var(--red);
-}
-
-/* ══ BOTÓN FLOTANTE PARA ESCRIBIR (móvil) ═══════════════════════════ */
-.fab-message {
-  display: none;
-  position: fixed;
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 28px;
-  background: var(--gold);
-  border: none;
-  color: var(--dark);
-  font-size: 1.8rem;
-  cursor: pointer;
-  z-index: 150;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  transition: all 0.2s ease;
-  align-items: center;
-  justify-content: center;
-}
-
-.fab-message:active {
-  transform: scale(0.95);
-}
-
-/* ══ MODAL PARA ESCRIBIR MENSAJE (móvil) ═══════════════════════════ */
-.message-modal {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--dark2);
-  border-top: 1px solid var(--border);
-  border-radius: 20px 20px 0 0;
-  z-index: 200;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px)) 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.message-modal.open {
-  transform: translateY(0);
-}
-
-.message-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.message-modal-header h4 {
-  font-family: 'Clash Display', sans-serif;
-  color: var(--gold);
-}
-
-.message-modal-close {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.25rem;
-}
-
-.message-modal-toolbar {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.message-modal-toolbar .tool-btn {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0.5rem;
-  font-size: 1.2rem;
-}
-
-.message-modal-input {
-  width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.85rem;
-  color: var(--text);
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  outline: none;
-  resize: none;
-  min-height: 80px;
-}
-
-.message-modal-input:focus {
-  border-color: var(--gold);
-}
-
-.message-modal-actions {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.message-modal-actions .btn-send {
-  flex: 1;
-  width: auto;
-  height: auto;
-  padding: 0.85rem;
-  font-size: 1rem;
-}
-
-/* ══ SIDEBAR ══════════════════════════════════════════════ */
-.sidebar {
-  width:var(--sidebar);
-  background:var(--dark2);
-  border-right:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-  flex-shrink:0;
-  height:100vh;
-}
-.sidebar-header {
-  padding:1rem 1.25rem;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  gap:.75rem;
-}
-.sidebar-logo {
-  font-family:'Clash Display',sans-serif;
-  font-size:1.15rem;
-  color:var(--gold);
-  font-weight:700;
-}
-.sidebar-logo span { font-size:1.4rem; }
-.sidebar-tabs {
-  display:flex;
-  border-bottom:1px solid var(--border);
-}
-.stab {
-  flex:1; padding:.65rem .25rem;
-  background:none; border:none;
-  color:var(--muted); font-size:1.2rem;
-  cursor:pointer; transition:all .2s;
-  position:relative;
-}
-.stab.active { color:var(--gold); }
-.stab.active::after {
-  content:'';
-  position:absolute; bottom:0; left:25%; right:25%;
-  height:2px; background:var(--gold); border-radius:2px;
-}
-.badge {
-  position:absolute; top:6px; right:6px;
-  background:var(--red); color:#fff;
-  border-radius:999px; font-size:.65rem;
-  padding:1px 5px; font-weight:700;
-  display:none;
-}
-.badge.show{display:block}
-
-/* ── Lista de chats ── */
-.panel { display:none; flex:1; flex-direction:column; overflow:hidden; }
-.panel.active { display:flex; }
-
-.search-box {
-  padding:.75rem 1rem;
-  border-bottom:1px solid var(--border);
-}
-.search-box input {
-  width:100%; background:var(--surface);
-  border:1px solid var(--border); border-radius:10px;
-  padding:.5rem .75rem; color:var(--text);
-  font-family:'Syne',sans-serif; font-size:.85rem; outline:none;
-}
-.search-box input:focus { border-color:var(--gold); }
-
-.list { overflow-y:auto; flex:1; }
-.list::-webkit-scrollbar{width:4px}
-.list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-
-.list-item {
-  display:flex; align-items:center; gap:.75rem;
-  padding:.75rem 1rem; cursor:pointer;
-  border-bottom:1px solid var(--border);
-  transition:background .15s;
-  position:relative;
-}
-.list-item:hover { background:var(--surface); }
-.list-item.active { background:rgba(245,200,66,.08); border-left:3px solid var(--gold); }
-
-/* Indicador de mensaje no leído - circulito verde */
-.unread-indicator {
-  width: 12px;
-  height: 12px;
-  background-color: var(--green);
-  border-radius: 50%;
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  box-shadow: 0 0 4px var(--green);
-  display: none;
-}
-
-.unread-indicator.show {
-  display: block;
-}
-
-.avatar {
-  width:40px; height:40px; border-radius:50%;
-  background:var(--surface2);
-  display:flex; align-items:center; justify-content:center;
-  font-size:1.1rem; flex-shrink:0; position:relative;
-  font-weight:600; color:var(--gold);
-  font-family:'Clash Display',sans-serif;
-}
-.status-dot {
-  width:10px;height:10px;border-radius:50%;
-  border:2px solid var(--dark2);
-  position:absolute;bottom:0;right:0;
-}
-.online{background:var(--green)}
-.offline{background:var(--muted)}
-.away{background:var(--gold)}
-
-.list-info { flex:1; min-width:0; }
-.list-name  { font-size:.9rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.list-preview { font-size:.78rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:.15rem; }
-
-.btn-add {
-  margin:1rem; padding:.6rem; border-radius:12px;
-  background:rgba(245,200,66,.12); border:1px dashed rgba(245,200,66,.3);
-  color:var(--gold); font-family:'Syne',sans-serif;
-  cursor:pointer; font-size:.85rem; transition:all .2s;
-}
-.btn-add:hover { background:rgba(245,200,66,.2); }
-
-/* ── User info bottom ── */
-.sidebar-footer {
-  padding:1rem;
-  border-top:1px solid var(--border);
-  display:flex; align-items:center; gap:.75rem;
-}
-.my-info { flex:1; min-width:0; }
-.my-name { font-weight:600; font-size:.9rem; }
-.my-points { font-size:.75rem; color:var(--gold); }
-.btn-icon {
-  background:none; border:none;
-  color:var(--muted); cursor:pointer;
-  font-size:1.1rem; padding:.25rem;
-  transition:color .2s;
-}
-.btn-icon:hover { color:var(--text); }
-
-/* ══ MAIN AREA ════════════════════════════════════════════ */
-.main {
-  flex:1; display:flex; flex-direction:column;
-  height:100vh; overflow:hidden; position:relative;
-}
-
-/* ── Chat header ── */
-.chat-header {
-  padding:1rem 1.5rem;
-  border-bottom:1px solid var(--border);
-  display:flex; align-items:center; gap:1rem;
-  background:var(--dark2); flex-shrink:0;
-}
-.chat-title { font-family:'Clash Display',sans-serif; font-size:1.1rem; }
-.chat-sub   { font-size:.78rem; color:var(--muted); }
-.header-actions { margin-left:auto; display:flex; gap:.5rem; }
-.btn-action {
-  padding:.45rem .9rem; border-radius:9px;
-  border:1px solid var(--border); background:var(--surface);
-  color:var(--text); font-family:'Syne',sans-serif;
-  font-size:.82rem; cursor:pointer; transition:all .2s;
-  display:flex; align-items:center; gap:.4rem;
-}
-.btn-action:hover { border-color:var(--gold); color:var(--gold); }
-.btn-action.danger:hover { border-color:var(--red); color:var(--red); }
-
-/* ── Messages ── */
-.messages {
-  flex:1; overflow-y:auto; padding:1.25rem 1.5rem 1.5rem 1.5rem;
-  display:flex; flex-direction:column; gap:.75rem;
-}
-.messages::-webkit-scrollbar{width:4px}
-.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-
-.msg-wrapper { display:flex; gap:.6rem; max-width:70%; }
-.msg-wrapper.mine { flex-direction:row-reverse; align-self:flex-end; }
-.msg-wrapper.theirs { align-self:flex-start; }
-
-.msg-avatar { width:30px; height:30px; border-radius:50%; font-size:.8rem; flex-shrink:0;
-  background:var(--surface2); display:flex; align-items:center; justify-content:center;
-  color:var(--gold); font-weight:600; }
-
-.msg-bubble {
-  background:var(--surface);
-  border-radius:16px; padding:.6rem .9rem;
-  font-size:.9rem; line-height:1.5;
-  border:1px solid var(--border);
-  word-break:break-word;
-}
-.mine .msg-bubble {
-  background:rgba(245,200,66,.15);
-  border-color:rgba(245,200,66,.25);
-}
-.msg-meta { font-size:.7rem; color:var(--muted); margin-top:.3rem; display:flex; gap:.5rem; align-items:center; }
-.msg-sender { font-weight:600; font-size:.78rem; color:var(--gold); margin-bottom:.2rem; }
-.encrypted-badge { font-size:.65rem; color:var(--muted); }
-
-.msg-file img { max-width:200px; border-radius:10px; cursor:pointer; }
-.msg-file audio { width:200px; }
-
-/* Estilos para mensaje de ubicación */
-.location-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-width: 250px;
-}
-
-.location-map {
-  width: 100%;
-  height: 150px;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 0.25rem;
-}
-
-.location-map img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.location-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--blue);
-  text-decoration: none;
-  font-size: 0.8rem;
-  padding: 0.25rem 0;
-}
-
-.location-link:hover {
-  text-decoration: underline;
-}
-
-.location-coords {
-  font-size: 0.7rem;
-  color: var(--muted);
-  font-family: monospace;
-}
-
-.typing-indicator { font-size:.8rem; color:var(--muted); padding:.25rem 0; font-style:italic; }
-
-/* ── Input area (se oculta en móvil) ── */
-.input-area {
-  padding:1rem 1.5rem;
-  border-top:1px solid var(--border);
-  background:var(--dark2); flex-shrink:0;
-}
-.input-toolbar {
-  display:flex; gap:.5rem; margin-bottom:.5rem;
-}
-.tool-btn {
-  background:none; border:none;
-  color:var(--muted); cursor:pointer;
-  font-size:1.1rem; padding:.25rem;
-  transition:color .2s;
-}
-.tool-btn:hover { color:var(--gold); }
-
-.encrypt-toggle {
-  margin-left:auto;
-  display:flex; align-items:center; gap:.4rem;
-  font-size:.78rem; color:var(--muted);
-}
-.encrypt-toggle input[type=checkbox] { accent-color:var(--gold); }
-
-.input-row { display:flex; gap:.75rem; align-items:flex-end; }
-.msg-input {
-  flex:1; background:var(--surface);
-  border:1px solid var(--border); border-radius:14px;
-  padding:.75rem 1rem; color:var(--text);
-  font-family:'Syne',sans-serif; font-size:.95rem;
-  outline:none; resize:none; max-height:120px;
-  transition:border-color .2s; line-height:1.5;
-}
-.msg-input:focus { border-color:var(--gold); }
-.btn-send {
-  width:44px; height:44px; border-radius:12px;
-  background:var(--gold); border:none;
-  color:var(--dark); font-size:1.1rem;
-  cursor:pointer; transition:all .2s;
-  display:flex; align-items:center; justify-content:center;
-}
-.btn-send:hover { background:var(--gold2); transform:translateY(-1px); }
-
-/* ── Empty state ── */
-.empty-state {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:1rem; color:var(--muted); text-align:center;
-}
-.empty-state span { font-size:3.5rem; }
-.empty-state h2 { font-family:'Clash Display',sans-serif; font-size:1.3rem; color:var(--text); }
-
-/* ══ PANELS (Tareas / Recompensas) ════════════════════════ */
-.side-panel {
-  width:320px; background:var(--dark2);
-  border-left:1px solid var(--border);
-  display:none; flex-direction:column;
-  height:100vh;
-}
-.side-panel.open { display:flex; }
-.panel-header {
-  padding:1rem 1.25rem;
-  border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
-}
-.panel-title { font-family:'Clash Display',sans-serif; font-size:1rem; }
-.panel-body { overflow-y:auto; flex:1; padding:1rem; display:flex; flex-direction:column; gap:.75rem; }
-.panel-body::-webkit-scrollbar{width:4px}
-.panel-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-
-/* ── Task card ── */
-.task-card {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:14px; padding:.9rem 1rem;
-}
-.task-title { font-weight:600; font-size:.9rem; margin-bottom:.3rem; }
-.task-meta  { font-size:.75rem; color:var(--muted); }
-.task-status {
-  display:inline-block; margin-top:.4rem;
-  padding:.2rem .6rem; border-radius:999px;
-  font-size:.72rem; font-weight:600;
-}
-.status-pending     { background:rgba(245,200,66,.15); color:var(--gold); }
-.status-done        { background:rgba(74,222,128,.15);  color:var(--green); }
-.status-in_progress { background:rgba(96,165,250,.15);  color:var(--blue); }
-.btn-complete {
-  margin-top:.6rem; padding:.35rem .75rem;
-  border-radius:8px; border:1px solid rgba(74,222,128,.3);
-  background:rgba(74,222,128,.1); color:var(--green);
-  font-size:.78rem; cursor:pointer; font-family:'Syne',sans-serif;
-  transition:all .2s;
-}
-.btn-complete:hover { background:rgba(74,222,128,.2); }
-
-/* ── Reward card ── */
-.reward-card {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:14px; padding:.75rem 1rem;
-  display:flex; align-items:center; gap:.75rem;
-}
-.reward-icon { font-size:1.8rem; }
-.reward-info .reward-name { font-weight:600; font-size:.88rem; }
-.reward-info .reward-desc { font-size:.75rem; color:var(--muted); }
-.reward-earned { margin-left:auto; font-size:1.2rem; }
-
-/* ── Leaderboard ── */
-.leader-row {
-  display:flex; align-items:center; gap:.75rem;
-  padding:.6rem .75rem; border-radius:12px;
-  background:var(--surface); border:1px solid var(--border);
-}
-.leader-rank { font-family:'Clash Display',sans-serif; font-size:1rem; width:24px; color:var(--muted); }
-.leader-rank.gold-rank { color:var(--gold); }
-.leader-pts { margin-left:auto; font-size:.85rem; color:var(--gold); font-weight:600; }
-
-/* ══ MODALS ═══════════════════════════════════════════════ */
-.modal-overlay {
-  position:fixed; inset:0; z-index:100;
-  background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
-  display:none; align-items:center; justify-content:center;
-}
-.modal-overlay.open { display:flex; }
-.modal {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:20px; padding:1.75rem; width:90%; max-width:420px;
-  max-height:80vh; display:flex; flex-direction:column; gap:1rem;
-}
-.modal h3 { font-family:'Clash Display',sans-serif; font-size:1.1rem; }
-.modal input, .modal textarea, .modal select {
-  width:100%; background:var(--dark2);
-  border:1px solid var(--border); border-radius:10px;
-  padding:.65rem .9rem; color:var(--text);
-  font-family:'Syne',sans-serif; font-size:.9rem; outline:none;
-}
-.modal input:focus,.modal textarea:focus,.modal select:focus { border-color:var(--gold); }
-.modal textarea { resize:vertical; min-height:80px; }
-.modal-actions { display:flex; gap:.75rem; margin-top:.25rem; }
-.btn-modal-ok {
-  flex:1; padding:.7rem; border-radius:10px;
-  background:var(--gold); border:none; color:var(--dark);
-  font-family:'Clash Display',sans-serif; font-weight:600;
-  cursor:pointer; font-size:.95rem; transition:all .2s;
-}
-.btn-modal-ok:hover { background:var(--gold2); }
-.btn-modal-cancel {
-  flex:1; padding:.7rem; border-radius:10px;
-  background:none; border:1px solid var(--border); color:var(--muted);
-  font-family:'Syne',sans-serif; cursor:pointer;
-  transition:all .2s;
-}
-.btn-modal-cancel:hover { border-color:var(--text); color:var(--text); }
-
-.users-list-check { overflow-y:auto; max-height:180px; display:flex; flex-direction:column; gap:.4rem; }
-.user-check-item {
-  display:flex; align-items:center; gap:.6rem;
-  padding:.4rem .6rem; border-radius:8px;
-  cursor:pointer; transition:background .15s;
-}
-.user-check-item:hover { background:var(--surface2); }
-.user-check-item input[type=checkbox] { accent-color:var(--gold); }
-
-/* ══ VIDEOLLAMADA ════════════════════════════════════════ */
-.call-overlay {
-  position:fixed; inset:0; z-index:200;
-  background:#000; display:none;
-  flex-direction:column;
-}
-.call-overlay.open { display:flex; }
-.video-grid {
-  flex:1; display:grid;
-  grid-template-columns:1fr 1fr; gap:8px; padding:8px;
-}
-video { width:100%; height:100%; object-fit:cover; border-radius:12px; background:#111; }
-#local-video  { grid-column:2; border:2px solid var(--gold); }
-#remote-video { grid-column:1; }
-.call-controls {
-  padding:1.25rem; display:flex; justify-content:center; gap:1rem;
-  background:rgba(0,0,0,.6); backdrop-filter:blur(8px);
-}
-.call-btn {
-  width:52px; height:52px; border-radius:50%; border:none;
-  font-size:1.3rem; cursor:pointer; transition:all .2s;
-  display:flex; align-items:center; justify-content:center;
-}
-.call-btn:hover { transform:scale(1.1); }
-.call-btn.end { background:var(--red); color:#fff; }
-.call-btn.mute, .call-btn.cam { background:var(--surface); color:var(--text); }
-
-/* ══ TOAST ═══════════════════════════════════════════════ */
-#toast-container {
-  position:fixed; top:1.5rem; right:1.5rem;
-  z-index:999; display:flex; flex-direction:column; gap:.5rem;
-}
-.toast {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:12px; padding:.75rem 1.1rem;
-  font-size:.88rem; box-shadow:0 8px 24px rgba(0,0,0,.4);
-  display:flex; align-items:center; gap:.6rem;
-  animation:slideIn .3s ease;
-  border-left:3px solid var(--gold);
-}
-@keyframes slideIn {
-  from { transform:translateX(120%); opacity:0; }
-  to   { transform:translateX(0);    opacity:1; }
-}
-
-/* ══ RESPONSIVE ══════════════════════════════════════════ */
-@media(max-width:768px) {
-  .mobile-header {
-    display: flex;
-  }
-  
-  .fab-message {
-    display: flex;
-  }
-  
-  .input-area {
-    display: none;
-  }
-  
-  .main {
-    margin-top: 60px;
-    height: calc(100vh - 60px);
-    height: calc(100dvh - 60px);
-  }
-  
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 200;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    width: 85%;
-    max-width: 300px;
-  }
-  
-  .sidebar.open {
-    transform: translateX(0);
-    box-shadow: 4px 0 20px rgba(0,0,0,0.5);
-  }
-  
-  .sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 199;
-    display: none;
-  }
-  
-  .sidebar-overlay.open {
-    display: block;
-  }
-  
-  .side-panel {
-    position: fixed;
-    top: 60px;
-    right: 0;
-    bottom: 0;
-    z-index: 150;
-    width: 85%;
-    max-width: 320px;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-  }
-  
-  .side-panel.open {
-    transform: translateX(0);
-  }
-  
-  .chat-header {
-    padding: 0.75rem 1rem;
-  }
-  
-  .chat-title {
-    font-size: 0.95rem;
-  }
-  
-  .header-actions {
-    gap: 0.25rem;
-  }
-  
-  .btn-action {
-    padding: 0.35rem 0.6rem;
-    font-size: 0.7rem;
-  }
-  
-  .msg-wrapper {
-    max-width: 85%;
-  }
-  
-  .messages {
-    padding: 1rem 1rem calc(80px + env(safe-area-inset-bottom, 16px)) 1rem;
-  }
-  
-  .location-map {
-    height: 120px;
-  }
-}
-
-/* ── File input hidden ── */
-#file-input { display:none; }
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <!-- MOBILE HEADER -->
 <div class="mobile-header">
-  <button class="menu-btn" onclick="toggleMobileSidebar()">☰</button>
+  <button class="menu-btn" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
   <span class="mobile-logo">Golden Boot</span>
-  <button class="mobile-logout" onclick="logout()">🚪</button>
+  <button class="mobile-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
 </div>
 
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
@@ -766,17 +23,19 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
+    <i class="fas fa-crown" style="color: var(--gold); font-size: 1.5rem;"></i>
     <span class="sidebar-logo">Golden Boot</span>
   </div>
 
-  <div class="sidebar-tabs">
-    <button class="stab active" onclick="switchSideTab('private')">💬
-      <span class="badge" id="badge-private"></span>
-    </button>
-    <button class="stab" onclick="switchSideTab('groups')">👥</button>
-    <button class="stab" onclick="switchSideTab('tasks')">✅</button>
-    <button class="stab" onclick="switchSideTab('rewards')">🏆</button>
-  </div>
+<div class="sidebar-tabs">
+  <button class="stab active" onclick="switchSideTab('private')"><i class="fas fa-comment-dots"></i>
+    <span class="badge" id="badge-private"></span>
+  </button>
+  <button class="stab" onclick="switchSideTab('groups')"><i class="fas fa-users"></i></button>
+  <button class="stab" onclick="switchSideTab('tasks')"><i class="fas fa-check-circle"></i></button>
+  <button class="stab" onclick="switchSideTab('rewards')"><i class="fas fa-trophy"></i></button>
+  <button class="stab" onclick="openDailyBonus()"><i class="fas fa-calendar-day"></i></button>
+</div>
 
   <div class="panel active" id="panel-private">
     <div class="search-box">
@@ -786,7 +45,7 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
   </div>
 
   <div class="panel" id="panel-groups">
-    <button class="btn-add" onclick="openCreateGroup()">+ Crear grupo</button>
+    <button class="btn-add" onclick="openCreateGroup()"><i class="fas fa-plus"></i> Crear grupo</button>
     <div class="list" id="groups-list"></div>
   </div>
 
@@ -804,16 +63,16 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
     <div class="avatar" id="my-avatar">?</div>
     <div class="my-info">
       <div class="my-name" id="my-name">—</div>
-      <div class="my-points" id="my-points">0 pts ✨</div>
+      <div class="my-points" id="my-points">0 pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i></div>
     </div>
-    <button class="btn-icon" onclick="logout()">🚪</button>
+    <button class="btn-icon" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
   </div>
 </aside>
 
 <!-- MAIN -->
 <main class="main">
   <div class="empty-state" id="empty-state">
-    <span>💬</span>
+    <i class="fas fa-comments" style="font-size: 3.5rem; color: var(--muted);"></i>
     <h2>Selecciona un chat</h2>
     <p>Elige un usuario o grupo para comenzar a chatear.</p>
   </div>
@@ -826,10 +85,10 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
         <div class="chat-sub" id="chat-sub">offline</div>
       </div>
       <div class="header-actions">
-        <button class="btn-action" id="btn-videocall" onclick="startCall()" style="display:none">Llamar</button>
-        <button class="btn-action" onclick="toggleTaskPanel()">Tareas</button>
-        <button class="btn-action" onclick="toggleLeaderboard()">Ranking</button>
-        <button class="btn-action" onclick="shareLocation()">📍 Ubicación</button>
+        <button class="btn-action" id="btn-videocall" onclick="startCall()" style="display:none"><i class="fas fa-video"></i> Llamar</button>
+        <button class="btn-action" onclick="toggleTaskPanel()"><i class="fas fa-tasks"></i> Tareas</button>
+        <button class="btn-action" onclick="toggleLeaderboard()"><i class="fas fa-chart-line"></i> Ranking</button>
+        <button class="btn-action" onclick="shareLocation()"><i class="fas fa-map-marker-alt"></i> Ubicación</button>
       </div>
     </div>
 
@@ -837,10 +96,9 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
 
     <div class="input-area">
       <div class="input-toolbar">
-        <button class="tool-btn" onclick="document.getElementById('file-input').click()">📎</button>
-        <button class="tool-btn" onclick="document.getElementById('file-input').click()">🖼️</button>
+        <button class="tool-btn" onclick="document.getElementById('file-input').click()"><i class="fas fa-image"></i></button>
         <label class="encrypt-toggle">
-          <input type="checkbox" id="encrypt-toggle"> Cifrar 🔒
+          <input type="checkbox" id="encrypt-toggle"> Cifrar <i class="fas fa-lock"></i>
         </label>
       </div>
       <div class="input-row">
@@ -849,89 +107,88 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
           rows="1"
           onkeydown="handleMsgKey(event)"
           oninput="autoResize(this);sendTyping()"></textarea>
-        <button class="btn-send" onclick="sendMessage()">➤</button>
+        <button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
   </div>
 </main>
 
-<button class="fab-message" id="fab-message" onclick="openMessageModal()">✏️</button>
+<button class="fab-message" id="fab-message" onclick="openMessageModal()"><i class="fas fa-pen"></i></button>
 
 <div class="message-modal" id="message-modal">
   <div class="message-modal-header">
     <h4>Escribir mensaje</h4>
-    <button class="message-modal-close" onclick="closeMessageModal()">✕</button>
+    <button class="message-modal-close" onclick="closeMessageModal()"><i class="fas fa-times"></i></button>
   </div>
   <div class="message-modal-toolbar">
-    <button class="tool-btn" onclick="attachFileFromModal()">📎</button>
-    <button class="tool-btn" onclick="attachImageFromModal()">🖼️</button>
+    <button class="tool-btn" onclick="attachImageFromModal()"><i class="fas fa-image"></i></button>
     <label class="encrypt-toggle" style="margin-left:auto">
-      <input type="checkbox" id="modal-encrypt-toggle"> Cifrar 🔒
+      <input type="checkbox" id="modal-encrypt-toggle"> Cifrar <i class="fas fa-lock"></i>
     </label>
   </div>
   <textarea class="message-modal-input" id="modal-msg-input" 
     placeholder="Escribe un mensaje..."
     rows="3"></textarea>
   <div class="message-modal-actions">
-    <button class="btn-send" onclick="sendMessageFromModal()">➤ Enviar</button>
+    <button class="btn-send" onclick="sendMessageFromModal()"><i class="fas fa-paper-plane"></i> Enviar</button>
   </div>
 </div>
 
 <aside class="side-panel" id="task-panel">
   <div class="panel-header">
-    <span class="panel-title">Tareas del grupo</span>
-    <button class="btn-icon" onclick="toggleTaskPanel()">✕</button>
+    <span class="panel-title"><i class="fas fa-tasks"></i> Tareas del grupo</span>
+    <button class="btn-icon" onclick="toggleTaskPanel()"><i class="fas fa-times"></i></button>
   </div>
   <div style="padding:1rem;border-bottom:1px solid var(--border)">
-    <button class="btn-add" style="margin:0;width:100%" onclick="openCreateTask()">+ Nueva tarea</button>
+    <button class="btn-add" style="margin:0;width:100%" onclick="openCreateTask()"><i class="fas fa-plus"></i> Nueva tarea</button>
   </div>
   <div class="panel-body" id="tasks-list"></div>
 </aside>
 
 <aside class="side-panel" id="leaderboard-panel">
   <div class="panel-header">
-    <span class="panel-title">Ranking Global</span>
-    <button class="btn-icon" onclick="toggleLeaderboard()">✕</button>
+    <span class="panel-title"><i class="fas fa-chart-line"></i> Ranking Global</span>
+    <button class="btn-icon" onclick="toggleLeaderboard()"><i class="fas fa-times"></i></button>
   </div>
   <div class="panel-body" id="leaderboard-list"></div>
 </aside>
 
 <div class="modal-overlay" id="modal-group">
   <div class="modal">
-    <h3>Crear grupo</h3>
+    <h3><i class="fas fa-users"></i> Crear grupo</h3>
     <input type="text" id="group-name" placeholder="Nombre del grupo">
     <textarea id="group-desc" placeholder="Descripción (opcional)"></textarea>
-    <label style="font-size:.82rem;color:var(--muted)">Agregar miembros:</label>
+    <label style="font-size:.82rem;color:var(--muted)"><i class="fas fa-user-plus"></i> Agregar miembros:</label>
     <div class="users-list-check" id="group-users-check"></div>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeModal('modal-group')">Cancelar</button>
-      <button class="btn-modal-ok" onclick="createGroup()">Crear</button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-group')"><i class="fas fa-times"></i> Cancelar</button>
+      <button class="btn-modal-ok" onclick="createGroup()"><i class="fas fa-check"></i> Crear</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-task">
   <div class="modal">
-    <h3>Nueva tarea</h3>
+    <h3><i class="fas fa-plus-circle"></i> Nueva tarea</h3>
     <input type="text" id="task-title" placeholder="Título de la tarea">
     <textarea id="task-desc" placeholder="Descripción (opcional)"></textarea>
     <select id="task-assign"><option value="">Asignar a... (opcional)</option></select>
     <input type="date" id="task-due">
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeModal('modal-task')">Cancelar</button>
-      <button class="btn-modal-ok" onclick="createTask()">Crear</button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-task')"><i class="fas fa-times"></i> Cancelar</button>
+      <button class="btn-modal-ok" onclick="createTask()"><i class="fas fa-check"></i> Crear</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-incoming-call">
   <div class="modal" style="text-align:center;align-items:center">
-    <span style="font-size:3rem">📹</span>
+    <i class="fas fa-phone-alt" style="font-size: 3rem; color: var(--gold);"></i>
     <h3 id="incoming-caller-name">Alguien te llama</h3>
     <p style="color:var(--muted);font-size:.9rem">Videollamada entrante</p>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="rejectCall()" style="color:var(--red);border-color:var(--red)">Rechazar</button>
-      <button class="btn-modal-ok" onclick="acceptCall()">Aceptar</button>
+      <button class="btn-modal-cancel" onclick="rejectCall()" style="color:var(--red);border-color:var(--red)"><i class="fas fa-phone-slash"></i> Rechazar</button>
+      <button class="btn-modal-ok" onclick="acceptCall()"><i class="fas fa-phone-alt"></i> Aceptar</button>
     </div>
   </div>
 </div>
@@ -942,14 +199,100 @@ video { width:100%; height:100%; object-fit:cover; border-radius:12px; backgroun
     <video id="local-video" autoplay playsinline muted></video>
   </div>
   <div class="call-controls">
-    <button class="call-btn mute" id="btn-mute" onclick="toggleMute()">🎤</button>
-    <button class="call-btn cam" id="btn-cam" onclick="toggleCam()">📷</button>
-    <button class="call-btn end" onclick="endCall()">📵</button>
+    <button class="call-btn mute" id="btn-mute" onclick="toggleMute()"><i class="fas fa-microphone"></i></button>
+    <button class="call-btn cam" id="btn-cam" onclick="toggleCam()"><i class="fas fa-video"></i></button>
+    <button class="call-btn end" onclick="endCall()"><i class="fas fa-phone-slash"></i></button>
   </div>
 </div>
 
 <input type="file" id="file-input" accept="image/*,audio/*,video/*,.pdf,.txt,.doc,.docx" onchange="handleFileUpload(this)">
 <div id="toast-container"></div>
+
+<!-- ===================================================== -->
+<!-- NUEVOS PANELES DE RECOMPENSAS -->
+<!-- ===================================================== -->
+
+<!-- Botón de Bono Diario
+<button class="daily-bonus-btn" id="dailyBonusBtn" onclick="claimDailyBonus()">
+  <i class="fas fa-calendar-day"></i>
+</button>
+-->
+
+<!-- Panel de Stickers -->
+<aside class="stickers-panel" id="stickersPanel">
+  <div class="stickers-header">
+    <span class="panel-title"><i class="fas fa-smile-wink"></i> Mis Stickers</span>
+    <button class="btn-icon" onclick="closeStickersPanel()"><i class="fas fa-times"></i></button>
+  </div>
+  <div style="padding:0.5rem 1rem; border-bottom:1px solid var(--border)">
+    <div class="nav-rewards">
+      <button class="nav-rewards-btn" onclick="showMyStickers()"><i class="fas fa-box"></i> Mis Stickers</button>
+      <button class="nav-rewards-btn" onclick="showShopStickers()"><i class="fas fa-store"></i> Tienda</button>
+    </div>
+  </div>
+  <div class="stickers-grid" id="stickersGrid">
+    <!-- Aquí se cargan los stickers -->
+  </div>
+</aside>
+
+<!-- Panel de Tienda -->
+<aside class="shop-panel" id="shopPanel">
+  <div class="stickers-header">
+    <span class="panel-title"><i class="fas fa-store"></i> Tienda de Recompensas</span>
+    <button class="btn-icon" onclick="closeShopPanel()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="panel-body" id="shopItemsList" style="padding:1rem">
+    <!-- Aquí se cargan los items de la tienda -->
+  </div>
+</aside>
+
+<!-- Panel de Eventos -->
+<aside class="events-panel" id="eventsPanel">
+  <div class="stickers-header">
+    <span class="panel-title"><i class="fas fa-map-marked-alt"></i> Eventos FIFA 2026</span>
+    <button class="btn-icon" onclick="closeEventsPanel()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="panel-body" id="eventsList" style="padding:1rem">
+    <!-- Aquí se cargan los eventos -->
+  </div>
+</aside>
+
+<!-- Modal de Bono Diario -->
+<div class="modal-overlay" id="modal-bonus">
+  <div class="modal bonus-modal-content">
+    <h3><i class="fas fa-calendar-alt"></i> Bono Diario</h3>
+    <div id="bonusContent">
+      <!-- Contenido dinámico -->
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal('modal-bonus')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de compra de sticker -->
+<div class="modal-overlay" id="modal-buy-sticker">
+  <div class="modal">
+    <h3><i class="fas fa-shopping-cart"></i> Comprar Sticker</h3>
+    <p id="buyStickerMessage"></p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal('modal-buy-sticker')">Cancelar</button>
+      <button class="btn-modal-ok" id="confirmBuyBtn" onclick="confirmBuySticker()">Comprar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de canje de recompensa -->
+<div class="modal-overlay" id="modal-buy-reward">
+  <div class="modal">
+    <h3><i class="fas fa-gift"></i> Canjear Recompensa</h3>
+    <p id="buyRewardMessage"></p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal('modal-buy-reward')">Cancelar</button>
+      <button class="btn-modal-ok" id="confirmRewardBtn" onclick="confirmBuyReward()">Canjear</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const API_BASE = window.location.origin + '/Progra_Orientada_Internet/backend/api';
@@ -966,6 +309,13 @@ let localStream  = null;
 let incomingCall = null;
 let unreadMessages = {};
 
+// Variables para almacenar efectos activos del usuario
+let userActiveEffects = {
+  golden_name: false,
+  avatar_frame: false,
+  chat_bubble: false
+};
+
 // Funciones de ubicación MEJORADAS
 function shareLocation() {
   if (!activeChat) {
@@ -973,7 +323,7 @@ function shareLocation() {
     return;
   }
   
-  toast('📍 Obteniendo tu ubicación...');
+  toast('<i class="fas fa-map-marker-alt"></i> Obteniendo tu ubicación...');
   
   navigator.geolocation.getCurrentPosition(
     async (position) => {
@@ -1018,7 +368,7 @@ function shareLocation() {
         created_at: new Date().toISOString()
       }, true);
       
-      toast('📍 Ubicación compartida');
+      toast('<i class="fas fa-map-marker-alt"></i> Ubicación compartida');
     },
     (error) => {
       console.error('Error de geolocalización:', error);
@@ -1038,20 +388,16 @@ function appendLocationMessage(msg, isMine) {
   const div = document.createElement('div');
   div.className = `msg-wrapper ${isMine ? 'mine' : 'theirs'}`;
   
-  // 🔥 CORRECCIÓN: Validar coordenadas
   let lat = parseFloat(msg.lat);
   let lng = parseFloat(msg.lng);
   
-  // Si vienen en content (formato "lat,lng")
   if (isNaN(lat) && msg.content && msg.content.includes(',')) {
     const parts = msg.content.split(',');
     lat = parseFloat(parts[0]);
     lng = parseFloat(parts[1]);
   }
   
-  // Si no hay coordenadas válidas, no mostrar el mapa
   const hasValidCoords = !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
-  
   const mapsUrl = msg.maps_url || (hasValidCoords ? `https://www.google.com/maps?q=${lat},${lng}` : '#');
   
   let locationHtml = '';
@@ -1066,10 +412,10 @@ function appendLocationMessage(msg, isMine) {
           </a>
         </div>
         <a href="${mapsUrl}" target="_blank" class="location-link">
-          📍 Ver ubicación en Google Maps
+          <i class="fas fa-map-marker-alt"></i> Ver ubicación en Google Maps
         </a>
         <div class="location-coords">
-          📌 ${lat.toFixed(6)}, ${lng.toFixed(6)}
+          <i class="fas fa-map-pin"></i> ${lat.toFixed(6)}, ${lng.toFixed(6)}
         </div>
       </div>
     `;
@@ -1078,11 +424,11 @@ function appendLocationMessage(msg, isMine) {
       <div class="location-card">
         <div class="location-map">
           <div style="width:100%; height:150px; background:#333; display:flex; align-items:center; justify-content:center; border-radius:8px;">
-            📍 Ubicación compartida
+            <i class="fas fa-map-marker-alt" style="font-size: 2rem; color: var(--gold);"></i> Ubicación compartida
           </div>
         </div>
         <a href="${mapsUrl}" target="_blank" class="location-link" style="${!mapsUrl || mapsUrl === '#' ? 'pointer-events:none; opacity:0.5;' : ''}">
-          📍 Ver ubicación
+          <i class="fas fa-map-marker-alt"></i> Ver ubicación
         </a>
       </div>
     `;
@@ -1096,7 +442,7 @@ function appendLocationMessage(msg, isMine) {
         ${locationHtml}
       </div>
       <div class="msg-meta">
-        <span>${formatTime(msg.created_at)}</span>
+        <span><i class="far fa-clock"></i> ${formatTime(msg.created_at)}</span>
       </div>
     </div>
   `;
@@ -1105,7 +451,6 @@ function appendLocationMessage(msg, isMine) {
   container.scrollTop = container.scrollHeight;
 }
 
-// Funciones para el menú móvil
 function toggleMobileSidebar() {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebar-overlay');
@@ -1154,7 +499,6 @@ function sendMessageFromModal() {
   if (activeChat.type === 'private') body.receiver_id = activeChat.id;
   else body.group_id = activeChat.id;
 
-  // Mostrar inmediatamente
   appendMessage({
     content: finalContent,
     is_encrypted: encrypted ? 1 : 0,
@@ -1236,10 +580,66 @@ function closeSidebarOnMobile() {
   }
 })();
 
+// ==================== EFECTOS VISUALES ====================
+
+// Función para cargar los efectos activos del usuario
+async function loadUserActiveEffects() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_my_purchases');
+    const purchases = data.purchases || [];
+    
+    const now = new Date();
+    
+    // Resetear efectos
+    userActiveEffects = {
+      golden_name: false,
+      avatar_frame: false,
+      chat_bubble: false
+    };
+    
+    for (const purchase of purchases) {
+      // Verificar si no ha expirado
+      let isActive = true;
+      if (purchase.expires_at) {
+        const expiresAt = new Date(purchase.expires_at);
+        if (expiresAt < now) isActive = false;
+      }
+      
+      if (isActive) {
+        if (purchase.name === '✨ Nombre Dorado') {
+          userActiveEffects.golden_name = true;
+        } else if (purchase.name === '🇲🇽 Avatar FIFA 2026') {
+          userActiveEffects.avatar_frame = true;
+        } else if (purchase.name === '💬 Burbuja Estadio') {
+          userActiveEffects.chat_bubble = true;
+        }
+      }
+    }
+    
+    // Aplicar efectos visuales
+    applyActiveEffects();
+    
+  } catch (error) {
+    console.error('Error loading effects:', error);
+  }
+}
+
+// Función para aplicar los efectos visuales
+function applyActiveEffects() {
+  const myAvatar = document.getElementById('my-avatar');
+  if (userActiveEffects.avatar_frame) {
+    myAvatar.classList.add('avatar-frame-fifa');
+  } else {
+    myAvatar.classList.remove('avatar-frame-fifa');
+  }
+}
+
 function initUI() {
   document.getElementById('my-name').textContent = currentUser.username;
-  document.getElementById('my-points').textContent = currentUser.points + ' pts ✨';
+  document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
   document.getElementById('my-avatar').textContent = currentUser.username[0].toUpperCase();
+  addRewardsButtons();
+  loadUserActiveEffects(); // ← ESTA LÍNEA ES IMPORTANTE
 }
 
 async function apiFetch(path, options = {}) {
@@ -1271,7 +671,6 @@ function handleWsMessage(msg) {
   switch (msg.type) {
     case 'auth_ok': toast('Conectado en tiempo real'); break;
     case 'private_msg':
-      // Solo procesar mensajes del OTRO usuario (el server ya no nos manda los nuestros)
       if (msg.sender_id == currentUser.id) break;
       if (activeChat?.type === 'private' && msg.sender_id == activeChat.id) {
         appendMessage(msg, false);
@@ -1279,25 +678,24 @@ function handleWsMessage(msg) {
       } else {
         showUnreadForChat(msg.sender_id, 'private');
         showUnreadBadge('private');
-        toast(`📩 Mensaje de ${getUserName(msg.sender_id)}`);
+        toast(`<i class="fas fa-envelope"></i> Mensaje de ${getUserName(msg.sender_id)}`);
       }
       break;
     case 'group_msg':
-      // Solo procesar mensajes del OTRO (el server excluye al emisor del broadcast)
       if (msg.sender_id == currentUser.id) break;
       if (activeChat?.type === 'group' && msg.group_id == activeChat.id) {
         appendMessage(msg, false);
         clearUnreadForChat(msg.group_id, 'group');
       } else {
         showUnreadForChat(msg.group_id, 'group');
-        toast(`📩 Mensaje en grupo`);
+        toast(`<i class="fas fa-users"></i> Mensaje en grupo`);
       }
       break;
     case 'location':
       if (activeChat && (msg.sender_id == activeChat.id || activeChat.type === 'group')) {
         appendLocationMessage(msg, msg.sender_id == currentUser.id);
       } else if (msg.sender_id != currentUser.id) {
-        toast(`📍 ${getUserName(msg.sender_id)} compartió su ubicación`);
+        toast(`<i class="fas fa-map-marker-alt"></i> ${getUserName(msg.sender_id)} compartió su ubicación`);
         showUnreadForChat(msg.sender_id, 'private');
       }
       break;
@@ -1377,10 +775,10 @@ function renderGroupsList() {
   const list = document.getElementById('groups-list');
   list.innerHTML = myGroups.map(g => `
     <div class="list-item" onclick="openGroupChat(${g.id}, '${escapeHtml(g.name)}')">
-      <div class="avatar">👥</div>
+      <div class="avatar"><i class="fas fa-users"></i></div>
       <div class="list-info">
         <div class="list-name">${escapeHtml(g.name)}</div>
-        <div class="list-preview">${g.member_count} miembros</div>
+        <div class="list-preview"><i class="fas fa-user-friends"></i> ${g.member_count} miembros</div>
       </div>
       <span class="unread-indicator" id="unread-group-${g.id}"></span>
     </div>
@@ -1434,7 +832,7 @@ async function openGroupChat(groupId, groupName) {
   document.getElementById('empty-state').style.display = 'none';
   const chatArea = document.getElementById('chat-area');
   chatArea.style.display = 'flex';
-  document.getElementById('chat-avatar').textContent = '👥';
+  document.getElementById('chat-avatar').innerHTML = '<i class="fas fa-users"></i>';
   document.getElementById('chat-title').textContent = groupName;
   document.getElementById('chat-sub').textContent = 'grupo';
   document.getElementById('btn-videocall').style.display = 'none';
@@ -1464,6 +862,12 @@ function appendMessage(msg, isMine) {
   const container = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = `msg-wrapper ${isMine ? 'mine' : 'theirs'}`;
+  
+  // Aplicar efecto de burbuja si está activo y es mensaje propio
+  if (isMine && userActiveEffects.chat_bubble) {
+    div.classList.add('chat-bubble-stadium');
+  }
+  
   let contentHtml = '';
   if (msg.file_type === 'image' && msg.file_path) {
     contentHtml = `<div class="msg-file"><img src="/Progra_Orientada_Internet/frontend/uploads/${msg.file_path}" onclick="window.open(this.src)"></div>`;
@@ -1471,29 +875,51 @@ function appendMessage(msg, isMine) {
     contentHtml = `<div class="msg-file"><audio controls src="/Progra_Orientada_Internet/frontend/uploads/${msg.file_path}"></audio></div>`;
   } else {
     let text = msg.content || '';
-    if (msg.is_encrypted) {
-      try { text = `🔒 ${atob(msg.content)}`; } catch { text = '🔒 Mensaje cifrado'; }
+    
+    // Detectar si es un sticker
+    const stickerMatch = text.match(/\[STICKER:(.+?)\]\s*(.*)/);
+    if (stickerMatch) {
+      const stickerIcon = stickerMatch[1];
+      const stickerName = stickerMatch[2];
+      contentHtml = `
+        <div style="font-size: 2.5rem; text-align: center;">${stickerIcon}</div>
+        <div style="font-size: 0.7rem; text-align: center; color: var(--muted);">${escapeHtml(stickerName)}</div>
+      `;
+    } else {
+      if (msg.is_encrypted) {
+        try { text = `<i class="fas fa-lock"></i> ${atob(msg.content)}`; } catch { text = '<i class="fas fa-lock"></i> Mensaje cifrado'; }
+      }
+      contentHtml = escapeHtml(text);
     }
-    contentHtml = escapeHtml(text);
   }
+  
+  // Nombre del remitente con efecto dorado si aplica
+  let senderNameHtml = '';
+  if (!isMine) {
+    senderNameHtml = `<div class="msg-sender">${escapeHtml(msg.username || '')}</div>`;
+  } else if (isMine && userActiveEffects.golden_name) {
+    senderNameHtml = `<div class="msg-sender golden-name">${escapeHtml(currentUser.username)}</div>`;
+  } else if (isMine) {
+    senderNameHtml = `<div class="msg-sender">${escapeHtml(currentUser.username)}</div>`;
+  }
+  
   div.innerHTML = `
     ${!isMine ? `<div class="msg-avatar">${(msg.username||'?')[0].toUpperCase()}</div>` : ''}
     <div>
-      ${!isMine ? `<div class="msg-sender">${escapeHtml(msg.username||'')}</div>` : ''}
+      ${senderNameHtml}
       <div class="msg-bubble">
         ${contentHtml}
-        ${msg.is_encrypted ? '<span class="encrypted-badge">🔒</span>' : ''}
+        ${msg.is_encrypted ? '<span class="encrypted-badge"><i class="fas fa-lock"></i></span>' : ''}
       </div>
       <div class="msg-meta">
-        <span>${formatTime(msg.created_at)}</span>
-        ${isMine && msg.is_read ? '<span>✓✓</span>' : ''}
+        <span><i class="far fa-clock"></i> ${formatTime(msg.created_at)}</span>
+        ${isMine && msg.is_read ? '<span><i class="fas fa-check-double"></i></span>' : ''}
       </div>
     </div>
   `;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
-
 async function sendMessage() {
   const input = document.getElementById('msg-input');
   const content = input.value.trim();
@@ -1503,7 +929,6 @@ async function sendMessage() {
   const body = { content: finalContent, encrypted: encrypted ? 1 : 0 };
   if (activeChat.type === 'private') body.receiver_id = activeChat.id;
   else body.group_id = activeChat.id;
-  // Mostrar inmediatamente sin esperar al servidor
   appendMessage({
     content: finalContent,
     is_encrypted: encrypted ? 1 : 0,
@@ -1532,7 +957,7 @@ function showTyping() {
     el = document.createElement('div');
     el.id = 'typing-indicator';
     el.className = 'typing-indicator';
-    el.textContent = '... escribiendo';
+    el.innerHTML = '<i class="fas fa-ellipsis-h"></i> escribiendo...';
     document.getElementById('messages').appendChild(el);
   }
   clearTimeout(typingTimer);
@@ -1568,7 +993,7 @@ async function createGroup() {
   if (!name) { toast('Ingresa un nombre', true); return; }
   if (members.length < 2) { toast('Agrega al menos 2 miembros', true); return; }
   await apiFetch('/groups.php?action=create', { method: 'POST', body: JSON.stringify({ name, description: desc, members }) });
-  toast('👥 Grupo creado');
+  toast('<i class="fas fa-users"></i> Grupo creado');
   closeModal('modal-group');
   loadMyGroups();
   document.getElementById('group-name').value = '';
@@ -1582,18 +1007,18 @@ async function loadTasks(groupId) {
   list.innerHTML = tasks.length ? tasks.map(t => `
     <div class="task-card">
       <div class="task-title">${escapeHtml(t.title)}</div>
-      <div class="task-meta">${t.assigned_to_name ? `👤 ${escapeHtml(t.assigned_to_name)}` : ''}${t.due_date ? ` · 📅 ${t.due_date}` : ''}</div>
-      <span class="task-status status-${t.status}">${t.status === 'done' ? 'Completada' : t.status === 'in_progress' ? 'En progreso' : 'Pendiente'}</span>
-      ${t.status !== 'done' ? `<br><button class="btn-complete" onclick="completeTask(${t.id})">Marcar como terminada</button>` : ''}
+      <div class="task-meta">${t.assigned_to_name ? `<i class="fas fa-user"></i> ${escapeHtml(t.assigned_to_name)}` : ''}${t.due_date ? ` · <i class="far fa-calendar-alt"></i> ${t.due_date}` : ''}</div>
+      <span class="task-status status-${t.status}">${t.status === 'done' ? '<i class="fas fa-check"></i> Completada' : t.status === 'in_progress' ? '<i class="fas fa-spinner"></i> En progreso' : '<i class="fas fa-clock"></i> Pendiente'}</span>
+      ${t.status !== 'done' ? `<br><button class="btn-complete" onclick="completeTask(${t.id})"><i class="fas fa-check-circle"></i> Marcar como terminada</button>` : ''}
     </div>
-  `).join('') : '<p style="color:var(--muted);font-size:.85rem">No hay tareas aún.</p>';
+  `).join('') : '<p style="color:var(--muted);font-size:.85rem"><i class="fas fa-info-circle"></i> No hay tareas aún.</p>';
 }
 
 function openCreateTask() {
   if (!activeChat || activeChat.type !== 'group') { toast('Selecciona un grupo primero', true); return; }
   apiFetch(`/groups.php?action=members&group_id=${activeChat.id}`).then(data => {
     const sel = document.getElementById('task-assign');
-    sel.innerHTML = '<option value="">Sin asignar</option>' + (data.members || []).map(m => `<option value="${m.id}">${escapeHtml(m.username)}</option>`).join('');
+    sel.innerHTML = '<option value=""><i class="fas fa-user"></i> Sin asignar</option>' + (data.members || []).map(m => `<option value="${m.id}">${escapeHtml(m.username)}</option>`).join('');
   });
   openModal('modal-task');
 }
@@ -1605,7 +1030,7 @@ async function createTask() {
   const due = document.getElementById('task-due').value;
   if (!title) { toast('Título requerido', true); return; }
   await apiFetch('/tasks.php?action=create', { method: 'POST', body: JSON.stringify({ group_id: activeChat.id, title, description: desc, assigned_to: assign || null, due_date: due || null }) });
-  toast('Tarea creada');
+  toast('<i class="fas fa-check-circle"></i> Tarea creada');
   closeModal('modal-task');
   document.getElementById('task-title').value = '';
   document.getElementById('task-desc').value = '';
@@ -1614,11 +1039,11 @@ async function createTask() {
 
 async function completeTask(taskId) {
   await apiFetch('/tasks.php?action=complete', { method: 'POST', body: JSON.stringify({ task_id: taskId }) });
-  toast('¡Tarea completada! +20 pts');
+  toast('<i class="fas fa-trophy"></i> ¡Tarea completada! +20 pts');
   loadTasks(activeChat.id);
   const me = await apiFetch('/auth.php?action=me');
   currentUser = me.user;
-  document.getElementById('my-points').textContent = currentUser.points + ' pts ✨';
+  document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
 }
 
 async function loadLeaderboard() {
@@ -1628,8 +1053,8 @@ async function loadLeaderboard() {
     <div class="leader-row">
       <span class="leader-rank ${i<3?'gold-rank':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
       <div class="avatar" style="width:32px;height:32px;font-size:.8rem">${u.username[0].toUpperCase()}</div>
-      <div><div style="font-size:.88rem;font-weight:600">${escapeHtml(u.username)}</div><div style="font-size:.72rem;color:var(--muted)">${u.badge_count} badges</div></div>
-      <span class="leader-pts">${u.points} pts</span>
+      <div><div style="font-size:.88rem;font-weight:600">${escapeHtml(u.username)}</div><div style="font-size:.72rem;color:var(--muted)"><i class="fas fa-medal"></i> ${u.badge_count} badges</div></div>
+      <span class="leader-pts">${u.points} <i class="fas fa-star" style="font-size: 0.7rem;"></i></span>
     </div>
   `).join('');
 }
@@ -1641,9 +1066,9 @@ async function loadMyRewards() {
     <div class="reward-card">
       <span class="reward-icon">${r.icon}</span>
       <div class="reward-info"><div class="reward-name">${escapeHtml(r.name)}</div><div class="reward-desc">${escapeHtml(r.description)}</div></div>
-      <span class="reward-earned">✓</span>
+      <span class="reward-earned"><i class="fas fa-check-circle" style="color: var(--gold);"></i></span>
     </div>
-  `).join('') || '<p style="color:var(--muted);font-size:.85rem">Aún no tienes recompensas.</p>';
+  `).join('') || '<p style="color:var(--muted);font-size:.85rem"><i class="fas fa-gift"></i> Aún no tienes recompensas.</p>';
 }
 
 async function startCall() {
@@ -1652,13 +1077,8 @@ async function startCall() {
         return; 
     }
     
-    console.log('[Call] Iniciando llamada a:', activeChat.id, activeChat.name);
-    console.log('[Call] WebSocket state:', ws ? ws.readyState : 'no connection');
-    
-    // Verificar WebSocket
     if (!ws || ws.readyState !== WebSocket.OPEN) {
         toast('No hay conexión con el servidor', true);
-        console.error('[Call] WebSocket no conectado');
         return;
     }
     
@@ -1669,9 +1089,8 @@ async function startCall() {
         from_name: currentUser.username 
     };
     
-    console.log('[Call] Enviando call_request:', callData);
     wsSend(callData);
-    toast(`📞 Llamando a ${activeChat.name}...`);
+    toast(`<i class="fas fa-phone-alt"></i> Llamando a ${activeChat.name}...`);
     await startWebRTC(true);
 }
 
@@ -1735,7 +1154,7 @@ function toggleMute() {
   const audioTrack = localStream.getAudioTracks()[0];
   if (audioTrack) {
     audioTrack.enabled = !audioTrack.enabled;
-    document.getElementById('btn-mute').textContent = audioTrack.enabled ? '🎤' : '🔇';
+    document.getElementById('btn-mute').innerHTML = audioTrack.enabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
   }
 }
 
@@ -1744,7 +1163,7 @@ function toggleCam() {
   const videoTrack = localStream.getVideoTracks()[0];
   if (videoTrack) {
     videoTrack.enabled = !videoTrack.enabled;
-    document.getElementById('btn-cam').textContent = videoTrack.enabled ? '📷' : '📵';
+    document.getElementById('btn-cam').innerHTML = videoTrack.enabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
   }
 }
 
@@ -1773,14 +1192,14 @@ function toast(msg, isError = false) {
   const el = document.createElement('div');
   el.className = 'toast';
   if (isError) el.style.borderLeftColor = 'var(--red)';
-  el.textContent = msg;
+  el.innerHTML = msg;
   document.getElementById('toast-container').appendChild(el);
   setTimeout(() => el.remove(), 3500);
 }
 
 function showUnreadBadge(panel) {
   const badge = document.getElementById(`badge-${panel}`);
-  if (badge) { badge.classList.add('show'); badge.textContent = '•'; }
+  if (badge) { badge.classList.add('show'); badge.innerHTML = '<i class="fas fa-circle" style="font-size: 0.6rem;"></i>'; }
 }
 
 function autoResize(el) {
@@ -1824,6 +1243,761 @@ document.addEventListener('click', function(e) {
     if (messageModal.classList.contains('open') && !messageModal.contains(e.target) && !e.target.closest('.fab-message')) closeMessageModal();
   }
 });
+
+// =====================================================
+// SISTEMA DE RECOMPENSAS - FUNCIONES
+// =====================================================
+
+// Variables globales para recompensas
+let selectedStickerId = null;
+let selectedRewardId = null;
+let allStickers = [];
+let myStickersList = [];
+let shopItems = [];
+let cityEvents = [];
+
+// ==================== BONO DIARIO ====================
+
+async function claimDailyBonus() {
+  try {
+    const info = await apiFetch('/rewards_system.php?action=get_daily_bonus_info');
+    
+    if (info.claimed_today) {
+      toast('Ya reclamaste tu bono de hoy', true);
+      return;
+    }
+    
+    // Mostrar modal con info del bono
+    const bonusContent = document.getElementById('bonusContent');
+    const bonusMap = info.bonus_map;
+    
+    let daysHtml = '';
+    for (let i = 1; i <= 7; i++) {
+      let statusClass = '';
+      if (i < info.current_streak) statusClass = 'completed';
+      if (i === info.current_streak) statusClass = 'active';
+      
+      daysHtml += `
+        <div class="bonus-day ${statusClass}">
+          <div>Día ${i}</div>
+          <div class="bonus-amount">${bonusMap[i]} pts</div>
+        </div>
+      `;
+    }
+    
+    bonusContent.innerHTML = `
+      <p>¡Reclama tu bono diario!</p>
+      <div class="bonus-streak">${daysHtml}</div>
+      <p style="margin-top: 1rem;">Racha actual: <strong>${info.current_streak}</strong> días</p>
+      <p>Bono de hoy: <strong style="color: var(--gold);">${info.today_bonus} pts</strong></p>
+      <button class="btn-primary" style="margin-top: 1rem; width: 100%;" onclick="confirmClaimDailyBonus()">
+        <i class="fas fa-gift"></i> Reclamar ${info.today_bonus} pts
+      </button>
+    `;
+    
+    openModal('modal-bonus');
+  } catch (error) {
+    toast('Error al obtener bono diario', true);
+  }
+}
+
+async function confirmClaimDailyBonus() {
+  closeModal('modal-bonus');
+  
+  try {
+    const result = await apiFetch('/rewards_system.php?action=claim_daily_bonus', {
+      method: 'POST'
+    });
+    
+    if (result.success) {
+      toast(`🎉 ${result.message}`);
+      // Actualizar puntos
+      const me = await apiFetch('/auth.php?action=me');
+      currentUser = me.user;
+      document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
+    } else {
+      toast(result.error, true);
+    }
+  } catch (error) {
+    toast('Error al reclamar bono', true);
+  }
+}
+
+// ==================== STICKERS ====================
+
+async function openStickersPanel() {
+  const panel = document.getElementById('stickersPanel');
+  panel.classList.toggle('open');
+  
+  if (panel.classList.contains('open')) {
+    await showMyStickers();
+  }
+}
+
+function closeStickersPanel() {
+  document.getElementById('stickersPanel').classList.remove('open');
+}
+
+async function showMyStickers() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_my_stickers');
+    myStickersList = data.stickers || [];
+    
+    const grid = document.getElementById('stickersGrid');
+    
+    if (myStickersList.length === 0) {
+      grid.innerHTML = '<p style="text-align:center; color: var(--muted); padding: 2rem;"><i class="fas fa-smile-wink"></i> No tienes stickers aún. ¡Compra algunos en la tienda!</p>';
+      return;
+    }
+    
+    grid.innerHTML = myStickersList.map(s => `
+      <div class="sticker-card" onclick="sendStickerToChat(${s.id}, '${s.icon}', '${escapeHtml(s.name)}')">
+        <div class="sticker-icon">${s.icon}</div>
+        <div class="sticker-name">${escapeHtml(s.name)}</div>
+        <div class="sticker-price">Usado: ${s.used_count} veces</div>
+      </div>
+    `).join('');
+  } catch (error) {
+    toast('Error al cargar stickers', true);
+  }
+}
+
+async function showShopStickers() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_stickers');
+    allStickers = data.stickers || [];
+    
+    const grid = document.getElementById('stickersGrid');
+    
+    if (allStickers.length === 0) {
+      grid.innerHTML = '<p style="text-align:center; color: var(--muted); padding: 2rem;">No hay stickers disponibles</p>';
+      return;
+    }
+    
+    grid.innerHTML = allStickers.map(s => `
+      <div class="sticker-card" onclick="prepareBuySticker(${s.id}, '${escapeHtml(s.name)}', ${s.price})">
+        <div class="sticker-icon">${s.icon}</div>
+        <div class="sticker-name">${escapeHtml(s.name)}</div>
+        <div class="sticker-price">${s.price} pts</div>
+      </div>
+    `).join('');
+  } catch (error) {
+    toast('Error al cargar tienda de stickers', true);
+  }
+}
+
+function prepareBuySticker(stickerId, stickerName, price) {
+  selectedStickerId = stickerId;
+  const msg = document.getElementById('buyStickerMessage');
+  msg.innerHTML = `¿Comprar sticker "<strong>${stickerName}</strong>" por <strong style="color: var(--gold);">${price} pts</strong>?`;
+  openModal('modal-buy-sticker');
+}
+
+async function confirmBuySticker() {
+  closeModal('modal-buy-sticker');
+  
+  try {
+    const result = await apiFetch('/rewards_system.php?action=buy_sticker', {
+      method: 'POST',
+      body: JSON.stringify({ sticker_id: selectedStickerId })
+    });
+    
+    if (result.success) {
+      toast(result.message);
+      // Actualizar puntos
+      const me = await apiFetch('/auth.php?action=me');
+      currentUser = me.user;
+      document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
+      await showShopStickers();
+    } else {
+      toast(result.error, true);
+    }
+  } catch (error) {
+    toast('Error al comprar sticker', true);
+  }
+}
+
+async function sendStickerToChat(stickerId, stickerIcon, stickerName) {
+  if (!activeChat) {
+    toast('Selecciona un chat primero', true);
+    return;
+  }
+  
+  // Enviar sticker como mensaje especial
+  const stickerMessage = `[STICKER:${stickerIcon}] ${stickerName}`;
+  
+  const body = {
+    content: stickerMessage,
+    encrypted: 0,
+  };
+  if (activeChat.type === 'private') body.receiver_id = activeChat.id;
+  else body.group_id = activeChat.id;
+  
+  // Mostrar inmediatamente
+  appendMessage({
+    content: stickerMessage,
+    is_encrypted: 0,
+    sender_id: currentUser.id,
+    username: currentUser.username,
+    created_at: new Date().toISOString()
+  }, true);
+  
+  wsSend({
+    type: activeChat.type === 'private' ? 'private_msg' : 'group_msg',
+    ...body,
+  });
+  
+  apiFetch('/messages.php?action=send', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  }).catch(() => {});
+  
+  // Registrar uso del sticker
+  await apiFetch('/rewards_system.php?action=use_sticker', {
+    method: 'POST',
+    body: JSON.stringify({ sticker_id: stickerId, chat_id: activeChat.id, chat_type: activeChat.type })
+  }).catch(() => {});
+  
+  closeStickersPanel();
+  toast(`Sticker enviado: ${stickerName}`);
+}
+
+// ==================== TIENDA ====================
+
+async function openShopPanel() {
+  const panel = document.getElementById('shopPanel');
+  panel.classList.toggle('open');
+  
+  if (panel.classList.contains('open')) {
+    await loadShopItems();
+  }
+}
+
+function closeShopPanel() {
+  document.getElementById('shopPanel').classList.remove('open');
+}
+
+async function loadShopItems() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_shop_items');
+    shopItems = data.shop_items || [];
+    
+    const list = document.getElementById('shopItemsList');
+    
+    if (shopItems.length === 0) {
+      list.innerHTML = '<p style="text-align:center; color: var(--muted); padding: 2rem;">No hay recompensas disponibles</p>';
+      return;
+    }
+    
+    list.innerHTML = shopItems.map(item => `
+      <div class="shop-item">
+        <div class="shop-item-icon">${item.icon}</div>
+        <div class="shop-item-info">
+          <div class="shop-item-name">${escapeHtml(item.name)}</div>
+          <div class="shop-item-desc">${escapeHtml(item.description)}</div>
+          <div class="shop-item-price">${item.cost} pts</div>
+        </div>
+        <button class="shop-item-buy ${item.already_owned ? 'disabled' : ''}" 
+                onclick="${item.already_owned ? '' : `prepareBuyReward(${item.id}, '${escapeHtml(item.name)}', ${item.cost})`}"
+                ${item.already_owned ? 'disabled' : ''}>
+          ${item.already_owned ? '<i class="fas fa-check"></i> Poseído' : '<i class="fas fa-shopping-cart"></i> Canjear'}
+        </button>
+      </div>
+    `).join('');
+  } catch (error) {
+    toast('Error al cargar tienda', true);
+  }
+}
+
+function prepareBuyReward(rewardId, rewardName, cost) {
+  selectedRewardId = rewardId;
+  const msg = document.getElementById('buyRewardMessage');
+  msg.innerHTML = `¿Canjear "<strong>${rewardName}</strong>" por <strong style="color: var(--gold);">${cost} pts</strong>?`;
+  openModal('modal-buy-reward');
+}
+
+async function confirmBuyReward() {
+  closeModal('modal-buy-reward');
+  
+  try {
+    const result = await apiFetch('/rewards_system.php?action=buy_reward', {
+      method: 'POST',
+      body: JSON.stringify({ reward_id: selectedRewardId })
+    });
+    
+    if (result.success) {
+      toast(result.message);
+      const me = await apiFetch('/auth.php?action=me');
+      currentUser = me.user;
+      document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
+      
+      // ← RECARGAR EFECTOS ACTIVOS
+      await loadUserActiveEffects();
+      
+      await loadShopItems();
+    } else {
+      toast(result.error, true);
+    }
+  } catch (error) {
+    toast('Error al canjear recompensa', true);
+  }
+}
+
+// ==================== EVENTOS POR CIUDAD ====================
+
+async function openEventsPanel() {
+  const panel = document.getElementById('eventsPanel');
+  panel.classList.toggle('open');
+  
+  if (panel.classList.contains('open')) {
+    await loadEvents();
+  }
+}
+
+function closeEventsPanel() {
+  document.getElementById('eventsPanel').classList.remove('open');
+}
+
+async function loadEvents() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_my_events_progress');
+    cityEvents = data.events || [];
+    
+    const list = document.getElementById('eventsList');
+    
+    if (cityEvents.length === 0) {
+      list.innerHTML = '<p style="text-align:center; color: var(--muted); padding: 2rem;">No hay eventos disponibles</p>';
+      return;
+    }
+    
+    list.innerHTML = cityEvents.map(event => {
+      const requiredTasks = JSON.parse(event.required_tasks || '[]');
+      const completedTasks = JSON.parse(event.tasks_completed || '[]');
+      
+      let cityName = '';
+      let cityIcon = '';
+      switch(event.city) {
+        case 'mty': cityName = 'Monterrey'; cityIcon = '🐎'; break;
+        case 'gdl': cityName = 'Guadalajara'; cityIcon = '🌮'; break;
+        case 'cdmx': cityName = 'CDMX'; cityIcon = '🦅'; break;
+        default: cityName = event.city; cityIcon = event.icon;
+      }
+      
+      const tasksHtml = requiredTasks.map((task, idx) => {
+        const isCompleted = completedTasks.includes(idx);
+        return `
+          <div class="event-task ${isCompleted ? 'completed' : ''}">
+            <div class="event-task-check ${isCompleted ? 'completed' : ''}" 
+                 onclick="${!isCompleted && !event.completed_at ? `completeEventTask(${event.id}, ${idx})` : ''}">
+              ${isCompleted ? '<i class="fas fa-check"></i>' : '✓'}
+            </div>
+            <div>${task}</div>
+          </div>
+        `;
+      }).join('');
+      
+      return `
+        <div class="event-card">
+          <div class="event-header">
+            <div class="event-icon">${cityIcon}</div>
+            <div class="event-title">${escapeHtml(event.name)}</div>
+          </div>
+          <div class="event-desc">${escapeHtml(event.description)}</div>
+          <div class="event-tasks">
+            <strong>Misiones:</strong>
+            ${tasksHtml}
+          </div>
+          <div class="event-reward">
+            <i class="fas fa-trophy"></i> Recompensa: ${event.reward_points} pts + ${event.reward_badge_icon || '🏅'} ${event.reward_badge_name || 'Insignia especial'}
+          </div>
+          ${event.is_completed ? '<div style="margin-top: 0.5rem; color: var(--green);"><i class="fas fa-check-circle"></i> ¡Evento completado!</div>' : ''}
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    toast('Error al cargar eventos', true);
+  }
+}
+
+async function completeEventTask(eventId, taskIndex) {
+  try {
+    const result = await apiFetch('/rewards_system.php?action=complete_event_task', {
+      method: 'POST',
+      body: JSON.stringify({ event_id: eventId, task_index: taskIndex })
+    });
+    
+    if (result.success) {
+      toast('¡Tarea completada!');
+      await loadEvents();
+      
+      // Si completó el evento, actualizar puntos
+      const me = await apiFetch('/auth.php?action=me');
+      if (me.user.points !== currentUser.points) {
+        currentUser = me.user;
+        document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
+      }
+    } else {
+      toast(result.error, true);
+    }
+  } catch (error) {
+    toast('Error al completar tarea', true);
+  }
+}
+
+// ==================== BOTONES DE NAVEGACIÓN RÁPIDA ====================
+
+// Agregar botones en el sidebar-footer o donde prefieras
+function addRewardsButtons() {
+  const footer = document.querySelector('.sidebar-footer');
+  if (footer && !document.querySelector('.rewards-quick-buttons')) {
+    const btnsDiv = document.createElement('div');
+    btnsDiv.className = 'rewards-quick-buttons';
+    btnsDiv.style.display = 'flex';
+    btnsDiv.style.gap = '0.5rem';
+    btnsDiv.style.marginTop = '0.5rem';
+    btnsDiv.style.flexWrap = 'wrap';
+    btnsDiv.innerHTML = `
+      <button class="nav-rewards-btn" onclick="openStickersPanel()" style="width: auto;">
+        <i class="fas fa-smile-wink"></i> Stickers
+      </button>
+      <button class="nav-rewards-btn" onclick="openShopPanel()" style="width: auto;">
+        <i class="fas fa-store"></i> Tienda
+      </button>
+      <button class="nav-rewards-btn" onclick="openEventsPanel()" style="width: auto;">
+        <i class="fas fa-map-marked-alt"></i> Eventos
+      </button>
+    `;
+    footer.appendChild(btnsDiv);
+  }
+}
+
+// Llamar a esta función después de initUI
+// Agrega al final de initUI():
+// addRewardsButtons();
+
+// Modificar la función initUI existente
+const originalInitUI = initUI;
+initUI = function() {
+  originalInitUI();
+  addRewardsButtons();
+};
+
+// =====================================================
+// FUNCIONES DE RECOMPENSAS CORREGIDAS
+// =====================================================
+
+// Función para abrir el bono diario desde el tab
+function openDailyBonus() {
+  claimDailyBonus();
+}
+
+// Función para cargar eventos dentro del panel de tareas
+async function loadEventsInTasks() {
+  const tasksContainer = document.getElementById('tasks-list');
+  
+  if (!tasksContainer) return;
+  
+  try {
+    // Mostrar loading
+    tasksContainer.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--muted)"><i class="fas fa-spinner fa-spin"></i> Cargando eventos...</div>';
+    
+    const data = await apiFetch('/rewards_system.php?action=get_my_events_progress');
+    const events = data.events || [];
+    
+    if (events.length === 0) {
+      tasksContainer.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--muted)"><i class="fas fa-info-circle"></i> No hay eventos disponibles por ahora.</div>';
+      return;
+    }
+    
+    let eventsHtml = '<div style="margin-bottom: 1rem;"><strong><i class="fas fa-map-marked-alt"></i> Eventos FIFA 2026</strong></div>';
+    
+    for (const event of events) {
+      const requiredTasks = JSON.parse(event.required_tasks || '[]');
+      const completedTasks = JSON.parse(event.tasks_completed || '[]');
+      
+      let cityName = '';
+      let cityIcon = '';
+      switch(event.city) {
+        case 'mty': cityName = '🏟️ Monterrey'; cityIcon = '🐎'; break;
+        case 'gdl': cityName = '🌮 Guadalajara'; cityIcon = '🎺'; break;
+        case 'cdmx': cityName = '🦅 CDMX'; cityIcon = '🌶️'; break;
+        default: cityName = event.city; cityIcon = event.icon || '🏆';
+      }
+      
+      const progressPercent = (completedTasks.length / requiredTasks.length) * 100;
+      
+      let tasksHtml = '';
+      for (let i = 0; i < requiredTasks.length; i++) {
+        const isCompleted = completedTasks.includes(i);
+        tasksHtml += `
+          <div class="event-task-item">
+            <div class="event-task-checkbox ${isCompleted ? 'completed' : ''}" 
+                 onclick="${!isCompleted && !event.is_completed ? `completeEventTaskFromTasks(${event.id}, ${i})` : ''}">
+              ${isCompleted ? '<i class="fas fa-check"></i>' : '✓'}
+            </div>
+            <div style="flex:1; ${isCompleted ? 'text-decoration: line-through; opacity:0.6' : ''}">${requiredTasks[i]}</div>
+          </div>
+        `;
+      }
+      
+      eventsHtml += `
+        <div class="event-in-task">
+          <div class="event-in-task-header">
+            <div class="event-in-task-icon">${cityIcon}</div>
+            <div class="event-in-task-title">${escapeHtml(event.name)}</div>
+          </div>
+          <div class="event-in-task-desc">${escapeHtml(event.description)}</div>
+          <div class="event-in-task-progress">
+            <div style="font-size:0.7rem; margin-bottom:0.3rem;">Progreso: ${completedTasks.length}/${requiredTasks.length} misiones</div>
+            <div style="background:var(--border); border-radius:10px; overflow:hidden;">
+              <div style="width:${progressPercent}%; height:4px; background:var(--gold);"></div>
+            </div>
+          </div>
+          ${tasksHtml}
+          <div class="event-reward-badge">
+            <i class="fas fa-trophy"></i> Recompensa: ${event.reward_points} pts 
+            ${event.reward_badge_icon ? `+ ${event.reward_badge_icon}` : ''} 
+            ${event.reward_badge_name ? event.reward_badge_name : 'Insignia especial'}
+          </div>
+          ${event.is_completed ? '<div style="margin-top:0.5rem; color:var(--green);"><i class="fas fa-check-circle"></i> ¡Evento completado!</div>' : ''}
+        </div>
+      `;
+    }
+    
+    tasksContainer.innerHTML = eventsHtml;
+    
+  } catch (error) {
+    console.error('Error loading events:', error);
+    tasksContainer.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--red)"><i class="fas fa-exclamation-triangle"></i> Error al cargar eventos. Intenta de nuevo.</div>';
+  }
+}
+
+// Función para completar tarea de evento desde el panel de tasks
+async function completeEventTaskFromTasks(eventId, taskIndex) {
+  try {
+    const result = await apiFetch('/rewards_system.php?action=complete_event_task', {
+      method: 'POST',
+      body: JSON.stringify({ event_id: eventId, task_index: taskIndex })
+    });
+    
+    if (result.success) {
+      toast('🎉 ¡Misión completada!');
+      await loadEventsInTasks(); // Recargar eventos
+      
+      // Actualizar puntos del usuario
+      const me = await apiFetch('/auth.php?action=me');
+      if (me.user.points !== currentUser.points) {
+        currentUser = me.user;
+        document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
+        toast(`✨ +${result.points_awarded || 0} puntos!`);
+      }
+    } else {
+      toast(result.error || 'Error al completar misión', true);
+    }
+  } catch (error) {
+    console.error('Error completing task:', error);
+    toast('Error al completar la misión', true);
+  }
+}
+
+// Función corregida para el bono diario
+async function claimDailyBonus() {
+  try {
+    // Mostrar loading en el toast
+    toast('🎁 Obteniendo información del bono diario...');
+    
+    const info = await apiFetch('/rewards_system.php?action=get_daily_bonus_info');
+    
+    if (info.claimed_today) {
+      toast('✅ Ya reclamaste tu bono de hoy. ¡Vuelve mañana!', true);
+      return;
+    }
+    
+    // Mostrar modal con info del bono
+    const bonusContent = document.getElementById('bonusContent');
+    const bonusMap = info.bonus_map;
+    
+    let daysHtml = '';
+    for (let i = 1; i <= 7; i++) {
+      let statusClass = '';
+      let statusText = '';
+      if (i < info.current_streak) {
+        statusClass = 'completed';
+        statusText = '✓';
+      }
+      if (i === info.current_streak) {
+        statusClass = 'active';
+        statusText = '🎁';
+      }
+      
+      daysHtml += `
+        <div class="bonus-day ${statusClass}">
+          <div>Día ${i}</div>
+          <div class="bonus-amount">${bonusMap[i]} pts</div>
+          <div style="font-size:0.6rem;">${statusText}</div>
+        </div>
+      `;
+    }
+    
+    bonusContent.innerHTML = `
+      <p style="margin-bottom: 1rem;">¡Reclama tu bono diario y mantén tu racha!</p>
+      <div class="bonus-streak">${daysHtml}</div>
+      <p style="margin-top: 1rem;">🔥 Racha actual: <strong style="color: var(--gold);">${info.current_streak}</strong> días</p>
+      <p>💰 Bono de hoy: <strong style="color: var(--gold); font-size: 1.2rem;">${info.today_bonus} pts</strong></p>
+      <button class="btn-primary" style="margin-top: 1rem; width: 100%;" onclick="confirmClaimDailyBonus()">
+        <i class="fas fa-gift"></i> Reclamar ${info.today_bonus} pts
+      </button>
+    `;
+    
+    openModal('modal-bonus');
+  } catch (error) {
+    console.error('Error getting daily bonus:', error);
+    toast('❌ Error al obtener información del bono diario', true);
+  }
+}
+
+async function confirmClaimDailyBonus() {
+  closeModal('modal-bonus');
+  
+  try {
+    toast('🎁 Reclamando bono...');
+    const result = await apiFetch('/rewards_system.php?action=claim_daily_bonus', {
+      method: 'POST'
+    });
+    
+    if (result.success) {
+      toast(`🎉 ${result.message}`);
+      // Actualizar puntos del usuario
+      const me = await apiFetch('/auth.php?action=me');
+      currentUser = me.user;
+      document.getElementById('my-points').innerHTML = currentUser.points + ' pts <i class="fas fa-star" style="color: var(--gold); font-size: 0.7rem;"></i>';
+    } else {
+      toast(result.error || 'Error al reclamar bono', true);
+    }
+  } catch (error) {
+    console.error('Error claiming bonus:', error);
+    toast('❌ Error al reclamar el bono diario', true);
+  }
+}
+
+// Función corregida para abrir el panel de stickers
+async function openStickersPanel() {
+  const panel = document.getElementById('stickersPanel');
+  panel.classList.toggle('open');
+  
+  if (panel.classList.contains('open')) {
+    try {
+      toast('Cargando stickers...');
+      await showMyStickers();
+    } catch (error) {
+      console.error('Error opening stickers panel:', error);
+      document.getElementById('stickersGrid').innerHTML = '<p style="text-align:center; padding:2rem; color:var(--red)">❌ Error al cargar stickers. Intenta de nuevo.</p>';
+    }
+  }
+}
+
+// Función corregida para mostrar mis stickers
+async function showMyStickers() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_my_stickers');
+    myStickersList = data.stickers || [];
+    
+    const grid = document.getElementById('stickersGrid');
+    
+    if (myStickersList.length === 0) {
+      grid.innerHTML = '<p style="text-align:center; color: var(--muted); padding: 2rem;"><i class="fas fa-smile-wink"></i> No tienes stickers aún. <br>¡Compra algunos en la tienda!</p>';
+      return;
+    }
+    
+    grid.innerHTML = myStickersList.map(s => `
+      <div class="sticker-card" onclick="sendStickerToChat(${s.id}, '${s.icon}', '${escapeHtml(s.name)}')">
+        <div class="sticker-icon">${s.icon}</div>
+        <div class="sticker-name">${escapeHtml(s.name)}</div>
+        <div class="sticker-price">Usado: ${s.used_count} veces</div>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Error loading my stickers:', error);
+    throw error;
+  }
+}
+
+// Función corregida para mostrar tienda de stickers
+async function showShopStickers() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_stickers');
+    allStickers = data.stickers || [];
+    
+    const grid = document.getElementById('stickersGrid');
+    
+    if (allStickers.length === 0) {
+      grid.innerHTML = '<p style="text-align:center; color: var(--muted); padding: 2rem;">No hay stickers disponibles</p>';
+      return;
+    }
+    
+    grid.innerHTML = allStickers.map(s => `
+      <div class="sticker-card" onclick="prepareBuySticker(${s.id}, '${escapeHtml(s.name)}', ${s.price})">
+        <div class="sticker-icon">${s.icon}</div>
+        <div class="sticker-name">${escapeHtml(s.name)}</div>
+        <div class="sticker-price">${s.price} pts</div>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Error loading shop stickers:', error);
+    throw error;
+  }
+}
+
+// Función corregida para abrir tienda
+async function openShopPanel() {
+  const panel = document.getElementById('shopPanel');
+  panel.classList.toggle('open');
+  
+  if (panel.classList.contains('open')) {
+    try {
+      toast('Cargando tienda...');
+      await loadShopItems();
+    } catch (error) {
+      console.error('Error opening shop panel:', error);
+      document.getElementById('shopItemsList').innerHTML = '<p style="text-align:center; padding:2rem; color:var(--red)">❌ Error al cargar tienda. Intenta de nuevo.</p>';
+    }
+  }
+}
+
+// Función corregida para cargar items de la tienda
+async function loadShopItems() {
+  try {
+    const data = await apiFetch('/rewards_system.php?action=get_shop_items');
+    shopItems = data.shop_items || [];
+    
+    const list = document.getElementById('shopItemsList');
+    
+    if (shopItems.length === 0) {
+      list.innerHTML = '<p style="text-align:center; color: var(--muted); padding: 2rem;">No hay recompensas disponibles</p>';
+      return;
+    }
+    
+    list.innerHTML = shopItems.map(item => `
+      <div class="shop-item">
+        <div class="shop-item-icon">${item.icon}</div>
+        <div class="shop-item-info">
+          <div class="shop-item-name">${escapeHtml(item.name)}</div>
+          <div class="shop-item-desc">${escapeHtml(item.description)}</div>
+          <div class="shop-item-price">${item.cost} pts</div>
+        </div>
+        <button class="shop-item-buy ${item.already_owned ? 'disabled' : ''}" 
+                onclick="${item.already_owned ? '' : `prepareBuyReward(${item.id}, '${escapeHtml(item.name)}', ${item.cost})`}"
+                ${item.already_owned ? 'disabled' : ''}>
+          ${item.already_owned ? '<i class="fas fa-check"></i> Poseído' : '<i class="fas fa-shopping-cart"></i> Canjear'}
+        </button>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Error loading shop items:', error);
+    throw error;
+  }
+}
+
 </script>
 </body>
 </html>

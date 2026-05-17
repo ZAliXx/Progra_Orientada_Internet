@@ -34,12 +34,9 @@ define('MAIL_FROM',     'aqua.azul10@gmail.com');
 define('MAIL_FROM_NAME', APP_NAME);
 
 // CORS (para ngrok)
-// Se aplica en cada endpoint
-
 $allowed_origins = [
     'http://localhost',
     'http://localhost:3000',
-    // ngrok agrega automáticamente el origen correcto... CREO
 ];
 
 // Helpers globales 

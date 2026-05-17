@@ -135,14 +135,15 @@ function updateStatus(PDO $db, int $userId, string $status): void {
 }
 
 function awardDailyPoints(PDO $db, int $userId): void {
-    // Solo una vez por día
+    // Verificar si ya reclamó bono hoy usando la nueva tabla
     $stmt = $db->prepare(
-        "SELECT COUNT(*) FROM notifications 
-         WHERE user_id = ? AND type = 'reward' AND DATE(created_at) = CURDATE()"
+        "SELECT id FROM daily_bonus 
+         WHERE user_id = ? AND bonus_date = CURDATE() AND claimed = 1"
     );
     $stmt->execute([$userId]);
-    if ($stmt->fetchColumn() > 0) return;
+    if ($stmt->fetch()) return;
 
+    // Dar puntos base por login
     $db->prepare('UPDATE users SET points = points + 5 WHERE id = ?')
        ->execute([$userId]);
 
