@@ -210,11 +210,13 @@ function sendLocation(PDO $db, int $senderId): void {
         'INSERT INTO messages (sender_id, receiver_id, group_id, content, file_type)
          VALUES (?, ?, ?, ?, ?)'
     );
+    // Guardar "lat,lng" como content para poder reconstruir el mapa en el historial
+    $coordsContent = "$lat,$lng";
     $stmt->execute([
         $senderId,
         $receiverId ?: null,
         $groupId ?: null,
-        $mapsUrl,
+        $coordsContent,
         'location'
     ]);
     
